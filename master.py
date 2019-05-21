@@ -11,8 +11,6 @@ class Model():
 
     def __init__(self, in=None, out=None):
         self.in = in
-        # tempout holds the changing output
-        self.tempout = out
         self.out = out
 
 
@@ -22,12 +20,18 @@ class Generator(Model):
     def __init__(self):
         Model.__init__()
 
+    def generate(din=None):
+        self.out = (np.random.rand(self.in.shape[1], self.in.shape[0]) if din is None else self.something(din))
+
+
+
 class Discriminator(Model):
 
     def __init__(self):
         Model.__init__()
 
-
+    def discriminate(in):
+        pass
 
 
 def main():
