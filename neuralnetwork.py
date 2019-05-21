@@ -8,10 +8,17 @@ def sigmoid_derivative(x):
 
 class NeuralNetwork:
     def __init__(self, x, y):
+        # self.input will be a NumPy array
         self.input      = x
+        #shape returns a tuple
+        #for array([[0], [1], [1], [0]]), shape returns (4, 1)
+        #   np.random.rand creates an array of the specified with random
+        #   values between 0 and 1
         self.weights1   = np.random.rand(self.input.shape[1],4)
         self.weights2   = np.random.rand(4,1)
+        # NumPy array
         self.y          = y
+        # NumPy array of zeros of given shape
         self.output     = np.zeros(self.y.shape)
 
     def feedforward(self):
