@@ -5,10 +5,16 @@ Hamilton College
 Summer 2019
 """
 
+import numpy as np
+
 class Model():
 
-    def __init__(self):
-        pass
+    def __init__(self, in=None, out=None):
+        self.in = in
+        # tempout holds the changing output
+        self.tempout = out
+        self.out = out
+
 
 
 class Generator(Model):
@@ -25,8 +31,20 @@ class Discriminator(Model):
 
 
 def main():
-    G = Generator()
+    samplein = np.array([[0,0,1],
+                         [0,1,1],
+                         [1,0,1],
+                         [1,1,1]])
+    G = Generator(samplein)
     D = Discriminator()
+
+    G.generate()
+    D.discriminate(G.out)
+
+    # change as needed
+    for _ in range(1):
+        G.generate(D.out)
+        D.discriminate(G.out)
 
 
 if __name__ == "__main__":
