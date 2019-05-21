@@ -2,7 +2,6 @@
 
 import numpy as np
 
-# COST FUNCTION
 def sigmoid(x):
     return 1.0/(1+ np.exp(-x))
 
@@ -34,6 +33,11 @@ class NeuralNetwork:
     def backprop(self):
         # application of the chain rule to find derivative of the loss function
         #   with respect to weights2 and weights1
+
+        # Uncomment to see error reduce
+        # error = self.y - self.output
+        # print(error.sum())
+
         d_weights2 = np.dot(self.layer1.T, (2*(self.y - self.output) *
                             sigmoid_derivative(self.output)))
         d_weights1 = np.dot(self.input.T,  (np.dot(2*(self.y - self.output)
