@@ -2,6 +2,7 @@
 
 import numpy as np
 
+# COST FUNCTION
 def sigmoid(x):
     return 1.0/(1+ np.exp(-x))
 
@@ -20,12 +21,15 @@ class NeuralNetwork:
         self.weights2   = np.random.rand(4,1)
         # NumPy array
         self.y          = y
-        # NumPy array of zeros of given shape
+        # NumPy array of zeros of given shape, doesn't really matter
         self.output     = np.zeros(self.y.shape)
 
     def feedforward(self):
-        self.layer1 = sigmoid(np.dot(self.input, self.weights1))
-        self.output = sigmoid(np.dot(self.layer1, self.weights2))
+        dotp1 = np.dot(self.input, self.weights1)
+        self.layer1 = sigmoid(dotp1)
+
+        dotp2 = np.dot(self.layer1, self.weights2)
+        self.output = sigmoid(dotp2)
 
     def backprop(self):
         # application of the chain rule to find derivative of the loss function
@@ -46,7 +50,10 @@ if __name__ == "__main__":
                   [0,1,1],
                   [1,0,1],
                   [1,1,1]])
+
     y = np.array([[0],[1],[1],[0]])
+    y = y.reshape(4, 1)
+
     nn = NeuralNetwork(X,y)
 
     for i in range(1500):
