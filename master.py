@@ -11,7 +11,6 @@ class Model():
         pass
 
 
-
 class Generator(Model):
 
     def __init__(self):
