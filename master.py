@@ -24,11 +24,14 @@ class Generator(Model):
     def __init__(self, in):
         Model.__init__()
         self.size = in.shape
+        self.weight = np.random.rand(in.shape[1], in.shape[0])
+        self.out = np.zeros(in.shape)
 
     def generate(din=None):
         # din is the discriminator input. If din is none this means that this is
         # the first time that we're calling generate and so the ouput should be
         # randomized. Otherwise, do something with din. We'll figure that out later.
+
         self.out = (np.random.rand(self.size[1], self.size[0]) if din is None else self.something(din))
 
 
