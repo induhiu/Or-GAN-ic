@@ -68,7 +68,12 @@ from keras.models import Sequential
 #         D.discriminate(G.out)
 
 def main():
-    pass
+    model = Sequential()
+    model.add(Dense(16, input_dim=8))
+
+    # compile using stochastic gradient descent
+    model.compile(optimizer='sgd')
+    model.summary()
 
 if __name__ == "__main__":
     main()
