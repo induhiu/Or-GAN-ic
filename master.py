@@ -66,12 +66,12 @@ class GAN:
                 y_dis[:batch_size] = 0.9
 
                 # Train discriminator
-                toggleDTrain()
+                self.toggleDTrain()
                 self.D.train_on_batch(X, y_dis)
 
                 # Train generator
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
-                toggleDTrain()
+                self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
 
