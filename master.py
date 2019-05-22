@@ -37,10 +37,7 @@ class GAN:
         self.D = get_discriminator(self.O)
         self.G = get_generator(self.O)
 
-        self.D.trainable = False
-
         self.input = Input(shape=(random_dim,))
-
         self.output = self.D(self.G(self.input))
 
         self.GAN = Model(inputs=self.input, outputs=self.output)
@@ -69,18 +66,19 @@ class GAN:
                 y_dis[:batch_size] = 0.9
 
                 # Train discriminator
-                self.D.trainable = True
+                toggleDTrain()
                 self.D.train_on_batch(X, y_dis)
 
                 # Train generator
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
-                y_gen = np.ones(batch_size)
-                self.D.trainable = False
-                self.GAN.train_on_batch(noise, y_gen)
+                toggleDTrain()
+
+                self.GAN.train_on_batch(noise, np.ones(batch_size))
 
             plot_generated_images(e, self.G)
 
-
+    def toggleDTrain(self):
+        self.D.trainable = not self.D.trainable
 
 def load_minst_data():
     # load the data
@@ -123,6 +121,9 @@ def get_discriminator(optimizer):
 
     D.add(Dense(1, activation='sigmoid'))
     D.compile(loss='binary_crossentropy', optimizer=optimizer)
+
+    D.trainable = False
+
     return D
 
 # Create a wall of generated MNIST images
