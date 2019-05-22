@@ -16,7 +16,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import initializers
 
 # Let Keras know that we are using tensorflow as our backend engine
-# os.environ["KERAS_BACKEND"] = "tensorflow"
+os.environ["KERAS_BACKEND"] = "tensorflow"
 
 # To make sure that we can reproduce the experiment and get the same results
 np.random.seed(10)
