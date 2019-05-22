@@ -6,7 +6,10 @@ Summer 2019
 """
 
 import numpy as np
-from keras.models import Sequential
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Activation, Dense
+from tensorflow.keras import initializers
+
 
 # def sigmoid(x):
 #     return 1.0/(1+ np.exp(-x))
@@ -69,10 +72,13 @@ from keras.models import Sequential
 
 def main():
     model = Sequential()
-    model.add(Dense(16, input_dim=8))
+    model.add(Dense(16, kernel_initializer='uniform', bias_initializer='zero', input_dim=3))
+    model.add(Activation('sigmoid'))
 
-    # compile using stochastic gradient descent
-    model.compile(optimizer='sgd')
+    #equivalent to model.add(Dense(16,..., activation='sigmoid'))
+
+    # compile using stochastic gradient descent, mean squared error,
+    model.compile(optimizer='sgd', loss='mse', metric='accuracy')
     model.summary()
 
 if __name__ == "__main__":
