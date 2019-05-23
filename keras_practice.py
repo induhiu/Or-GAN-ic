@@ -2,6 +2,7 @@
 # Import pandas
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+import numpy as np
 # Import `train_test_split` from `sklearn.model_selection`
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
@@ -12,6 +13,15 @@ white = pd.read_csv("http://archive.ics.uci.edu/ml/machine-learning-databases/wi
 
 # Read in red wine data
 red = pd.read_csv("http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv", sep=';')
+
+# Add `type` column to `red` with value 1
+red['type'] = 1
+
+# Add `type` column to `white` with value 0
+white['type'] = 0
+
+# Append `white` to `red`
+wines = red.append(white, ignore_index=True)
 
 # Specify the data
 X=wines.ix[:,0:11]
