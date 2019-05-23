@@ -5,6 +5,45 @@ to represent various English words.
 Implementation by Kenny Talarico, 5/23/2019.
 """
 import numpy as np
+from random import choice as pick
+
+class Logogram:
+
+    def __init__(self, array):
+        self.L = array
+
+class Mom:
+
+    def __init__(self, alphabet, signs):
+        self.alphabet = alphabet
+        self.signs = signs
+        # change to alter dimensions of 3x3 array. dim[0] and dim[1] should be
+        # the same.
+        self.dim = (3, 3)
+        self.size = self.dim[0] * self.dim[1]
+        self._createLanguage()
+
+    def _createLanguage(self):
+
+        # l is a list of empty Logograms with NumPy arrays of the above dimensions
+        logo = [Logogram(np.empty((3, 3), dtype=int)) for _ in range(2 ** self.size)]
+
+        # create every permutation of 0s and 1s
+        for x in range(2 ** self.size):
+            # change to reflect whatever characters are in alphabet
+            bits = createBits(self.size, x)
+            for ch in range(len(bits)):
+                logo[x].L[ch // self.dim[0]][ch % self.dim[0]] = int(bits[ch])
+
+        self.dictionary = {l:pick(self.signs) for l in logo}
+
+    def __str__(self):
+        for ary in self.dictionary:
+            print(ary.L, self.dictionary[ary])
+        return("--MOM--" + '\n' + "My alphabet consists of " + str(len(self.alphabet)) +
+               " characters: " + str(self.alphabet) + '. ' + "I have " + str(2**self.size) +
+               " words for " + str(self.signs) + '.')
+
 
 def createBits(x, num):
     result = "";
@@ -19,35 +58,15 @@ def createBits(x, num):
       v /= 2
     return result
 
-def createLogograms(A):
-    # change to alter dimensions of 3x3 array. dim[0] and dim[1] should be
-    # the same.
-    dim = (3, 3)
-
-    size = dim[0] * dim[1]
-
-    # l is a list of empty NumPy arrays of the above dimensions
-    l = [np.empty((3, 3), dtype=int) for _ in range(2 ** size)]
-
-    # create every permutation of 0s and 1s
-    for x in range(2 ** (dim[0] * dim[1])):
-        bits = createBits(size, x)
-        for ch in range(len(bits)):
-            l[x][ch // dim[0]][ch % dim[0]] = int(bits[ch])
-    return l
 
 def main():
     # Change to fill array with any other values
-    alphabet = [0, 1]
+    mom = Mom([0, 1], ['red', 'green', 'blue'])
+    print(mom)
 
-    signs = ['red', 'green', 'blue']
 
-    # logograms = createLogograms(alphabet)
 
-    # print(logograms[511])
 
-    for x in range(256):
-        print(createBits(8, x))
 
 if __name__ == '__main__':
     main()
