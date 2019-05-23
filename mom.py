@@ -1,6 +1,6 @@
 """
-Early implementation of a "mom" inventing a "language." The "mom" will do so
-teach the language to a "baby." This "mom" uses NumPy arrays of zeros and ones
+Early implementation of a "mom" inventing a "language." The "mom" will then
+teach the language to a "baby." This "mom" uses NumPy arrays of two characters
 to represent various English words.
 Implementation by Kenny Talarico, 5/23/2019.
 """
@@ -9,6 +9,8 @@ import secrets
 
 class Logogram:
 
+    # Logogram is a class so that the values can be stored in a dictionary
+    # later. NumPy arrays can't be dict keys.
     def __init__(self, array):
         self.L = array
 
@@ -24,23 +26,31 @@ class Mom:
         self._createLanguage()
 
     def _createLanguage(self):
-
+        """ Create the language. """
         self.dictionary = {}
         used = []
-        for s in self.signs:
-            n = secrets.randbelow(2 ** self.size)
-            used.append(n)
-            # avoid overlap
-            while n in used: n = secrets.randbelow(2 ** self.size)
 
+        # create word for each sign
+        for s in self.signs:
+
+            # avoid overlap
+            n = secrets.randbelow(2 ** self.size)
+            while n in used: n = secrets.randbelow(2 ** self.size)
+            used.append(n)
+
+            # start with an "empty" logogram
             logo = Logogram(np.empty(self.dim, dtype=str))
+
+            # create a bitstring with the given alphabet
             bits = createBits(self.size, n, self.alphabet)
             for ch in range(len(bits)):
                 logo.L[ch // self.dim[0]][ch % self.dim[0]] = bits[ch]
 
+            # update dictionary
             self.dictionary[logo] = s
 
     def __str__(self):
+        """ Provide information about this mom. """
         for ary in self.dictionary:
             print(ary.L, self.dictionary[ary])
         return("My alphabet consists of " + str(len(self.alphabet)) + " characters: "
@@ -49,6 +59,8 @@ class Mom:
 
 
 def createBits(x, num, al):
+    """ x is bitstream length, num is the numeral, al is the given two letter
+    alphabet. Will create a bitstring from any 2-character. """
     result = "";
     # x is length of bitstring
     v = 2 ** (x - 1)
@@ -66,9 +78,6 @@ def main():
     # Change to fill array with any other values
     mom = Mom(['%', '$'], ['red', 'green', 'blue'])
     print(mom)
-
-
-
 
 
 if __name__ == '__main__':
