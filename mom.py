@@ -75,8 +75,9 @@ def createBits(x, num, al):
 
 
 def main():
-    # Change to fill array with any other values
-    mom = Mom(['%', '$'], ['red', 'green', 'blue'])
+    # Change to fill array with any other values.
+    # Alphabet supports two letters. There can be up to 512 signs.
+    mom = Mom(['y', 'o'], ['kenny', 'ian', 'dave'])
     print(mom)
 
 
