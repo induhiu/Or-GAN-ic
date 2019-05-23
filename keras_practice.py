@@ -37,6 +37,15 @@ model.add(Dense(12, activation='relu', input_shape=(11,)))
 model.add(Dense(8, activation='relu'))
 # Add an output layer
 model.add(Dense(1, activation='sigmoid'))
+
+# Model output shape
+model.output_shape
+# Model summary
+model.summary()
+# Model config
+model.get_config()
+# List all weight tensors
+model.get_weights()
 ''' ------------------------------------------------------------ '''
 
 import numpy as np
@@ -60,7 +69,7 @@ model.add(Dense(4, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(data, labels,epochs=10,batch_size=32)
+model.fit(data, labels,epochs=10,batch_size=32) # train
 predictions = model.predict(data)
 # print(predictions)
 # print(labels)
