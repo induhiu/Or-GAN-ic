@@ -58,28 +58,42 @@ class Mom:
                " signs: " + str(self.signs) + '.')
 
 
-def createBits(x, num, al):
-    """ x is bitstream length, num is the numeral, al is the given two letter
-    alphabet. Will create a bitstring from any 2-character. """
-    result = "";
-    # x is length of bitstring
-    v = 2 ** (x - 1)
-    for _ in range(x):
-      if num >= v:
-          result += str(al[1])
-          num -= v
-      else:
-          result += str(al[0])
-      v /= 2
+def createBits(size, num, al):
+    """ num is the numeral, al is the given alphabet. Will return a bitstring
+    in the base equivalent to the size of the alphabet. """
+    base = len(al)
+    result = '';
+    bitstr = ['0' for _ in range(size)]
+
+    # for base 2
+    if num % 1 == 0:
+        bitstr[7] = '1'
+    if num % 2 == 0:
+        bitstr[6] = '1'
+    if num % 4 == 0:
+        bitstr[5] = '1'
+    if num % 8 == 0:
+        bitstr[4] = '1'
+    if num % 16 == 0:
+        bitstr[3] = '1'
+    if num % 32 == 0:
+        bitstr[2] = '1'
+    if num % 64 == 0:
+        bitstr[1] = '1'
+    if num % 128 == 0:
+        bitstr[0] = '1'
+
+    print(bitstr)
+
     return result
 
 
 def main():
     # Change to fill array with any other values.
     # Alphabet supports two letters. There can be up to 512 signs.
-    mom = Mom(['y', 'o'], ['kenny', 'ian', 'dave'])
-    print(mom)
-
+    # mom = Mom(['0', '1'], ['kenny', 'ian', 'dave', 'decker'])
+    # print(mom)
+    createBits(8, 4, [0, 1])
 
 if __name__ == '__main__':
     main()
