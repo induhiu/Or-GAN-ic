@@ -7,22 +7,25 @@ Implementation by Kenny Talarico, May 2019.
 import numpy as np
 import secrets
 
-class Logogram:
-
-    # Logogram is a class so that the values can be stored in a dictionary
-    # later. NumPy arrays can't be dict keys.
-    def __init__(self, array):
-        self.L = array
 
 class Mom:
 
     def __init__(self, alphabet, signs):
         self.alphabet = alphabet
         self.signs = signs
-        # change to alter dimensions of 3x3 array. dim[0] and dim[1] should be
-        # the same.
-        self.dim = (3, 3)
-        self.size = self.dim[0] * self.dim[1]
+        self.ASCIIsigns = []
+        ASCIIstr = ''
+        for word in signs:
+            for letter in word:
+                temp = str(ord(letter))
+                while len(temp) < 3:
+                    temp = '0' + temp
+                ASCIIstr += temp
+            self.ASCIIsigns.append(ASCIIstr)
+            ASCIIstr = ''
+
+        # each word will be 9 characters
+        self.size = 9
         self._createLanguage()
 
     def _createLanguage(self):
@@ -31,45 +34,31 @@ class Mom:
         used = []
 
         # create word for each sign
-        for s in self.signs:
+        for s in self.ASCIIsigns:
 
             # avoid overlap
             n = secrets.randbelow(len(self.alphabet) ** self.size)
             while n in used: n = secrets.randbelow(len(self.alphabet) ** self.size)
             used.append(n)
 
-            # start with an "empty" logogram
-            logo = Logogram(np.empty(self.dim, dtype=str))
-
-            # create a bitstring with the given alphabet
-            bits = convertToBase(n, len(self.alphabet), self.alphabet)
-            # leading "zeros"
-            while len(bits) < self.size:
-                bits = self.alphabet[0] + bits
-
-            # convert to array
-            for ch in range(len(bits)):
-                logo.L[ch // self.dim[0]][ch % self.dim[0]] = bits[ch]
-
-            # update dictionary
-            self.dictionary[logo] = s
+            self.dictionary[n] = s
+            # # create a bitstring with the given alphabet
+            # word = convertToBase(n, len(self.alphabet), self.alphabet)
+            # # leading "zeros"
+            # while len(word) < self.size:
+            #     word = self.alphabet[0] + word
+            #
+            # # update dictionary
+            # self.dictionary[word] = s
 
     def __str__(self):
         """ Provide information about this mom. """
         for ary in self.dictionary:
-            print(ary.L, self.dictionary[ary])
+            print(ary, self.dictionary[ary])
         return("My alphabet consists of " + str(len(self.alphabet)) + " characters: "
                + str(self.alphabet) + '. ' + "I have " + str(len(self.signs)) +
                " signs: " + str(self.signs) + '.')
 
-
-def convertToBase(n, base, alphabet):
-    """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
-        pythondsConvertinganIntegertoaStringinAnyBase.html """
-    if n < base:
-        return alphabet[n]
-    else:
-        return convertToBase(n // base, base, alphabet) + alphabet[n % base]
 
 # def main():
 #     # Change to fill array with any other values.
