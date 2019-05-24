@@ -34,15 +34,17 @@ class Mom:
         for s in self.signs:
 
             # avoid overlap
-            n = secrets.randbelow(2 ** self.size)
-            while n in used: n = secrets.randbelow(2 ** self.size)
+            n = secrets.randbelow(len(self.alphabet) ** self.size)
+            while n in used: n = secrets.randbelow(len(self.alphabet) ** self.size)
             used.append(n)
 
             # start with an "empty" logogram
             logo = Logogram(np.empty(self.dim, dtype=str))
 
             # create a bitstring with the given alphabet
-            bits = createBits(self.size, n, self.alphabet)
+            bits = convertToBase(n, len(self.alphabet), self.alphabet)
+            while len(bits) < self.size:
+                bits = self.alphabet[0] + bits
             for ch in range(len(bits)):
                 logo.L[ch // self.dim[0]][ch % self.dim[0]] = bits[ch]
 
@@ -58,42 +60,19 @@ class Mom:
                " signs: " + str(self.signs) + '.')
 
 
-def createBits(size, num, al):
-    """ num is the numeral, al is the given alphabet. Will return a bitstring
-    in the base equivalent to the size of the alphabet. """
-    base = len(al)
-    result = '';
-    bitstr = ['0' for _ in range(size)]
-
-    # for base 2
-    if num % 1 == 0:
-        bitstr[7] = '1'
-    if num % 2 == 0:
-        bitstr[6] = '1'
-    if num % 4 == 0:
-        bitstr[5] = '1'
-    if num % 8 == 0:
-        bitstr[4] = '1'
-    if num % 16 == 0:
-        bitstr[3] = '1'
-    if num % 32 == 0:
-        bitstr[2] = '1'
-    if num % 64 == 0:
-        bitstr[1] = '1'
-    if num % 128 == 0:
-        bitstr[0] = '1'
-
-    print(bitstr)
-
-    return result
-
+def convertToBase(n, base, alphabet):
+    """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
+        pythondsConvertinganIntegertoaStringinAnyBase.html """
+    if n < base:
+        return alphabet[n]
+    else:
+        return convertToBase(n // base, base, alphabet) + alphabet[n % base]
 
 def main():
     # Change to fill array with any other values.
-    # Alphabet supports two letters. There can be up to 512 signs.
-    # mom = Mom(['0', '1'], ['kenny', 'ian', 'dave', 'decker'])
-    # print(mom)
-    createBits(8, 4, [0, 1])
+    # There can an arbitrarily large alphabet and up to 512 signs.
+    mom = Mom(['a', 'b', 'c', 'd', 'e', 'f'], ['kenny', 'ian', 'dave', 'decker'])
+    print(mom)
 
 if __name__ == '__main__':
     main()
