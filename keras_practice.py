@@ -48,48 +48,57 @@ model.add(Dense(8, activation='relu'))
 # Add an output layer
 model.add(Dense(1, activation='sigmoid'))
 
-# Model output shape
-model.output_shape
-# Model summary
-model.summary()
-# Model config
-model.get_config()
-# List all weight tensors
-model.get_weights()
+# # Model output shape
+# model.output_shape
+# # Model summary
+# model.summary()
+# # Model config
+# model.get_config()
+# # List all weight tensors
+# model.get_weights()
+
+# Compile model. This is giving the model a loss function, optimizing function
+# and its metrics.
+model.compile(loss='binary_crossentropy',
+              optimizer='adam', metrics=['accuracy'])
+
+# Train the model
+model.fit(X_train, y_train,epochs=20, batch_size=1, verbose=1)
+
 ''' ------------------------------------------------------------ '''
-
-import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense
-
-# Training data
-data = np.random.random((1000,20)) # training
-labels = np.random.randint(2,size=(1000,1)) # output
-
-# Testing data
-x_test = np.random.random((100, 20))
-y_test = np.random.randint(2, size=(100, 1))
-# print(labels)
-
-model = Sequential()
-model.add(Dense(32, activation='relu', input_dim=20))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(4, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
-model.compile(optimizer='rmsprop',
-              loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(data, labels,epochs=10,batch_size=32) # train
-predictions = model.predict(data)
-# print(predictions)
-# print(labels)
-
-# if we want to evaluate the model's performance
-loss_and_metrics = model.evaluate(x_test, y_test, batch_size=128)
-print(loss_and_metrics)
-
-# if we want to test the model on a batch
-x_batch = np.random.random((100,20))
-y_batch = np.random.randint(2, size=(100, 1))
-results = test_on_batch(x_batch, y_batch)
-print(results)
+#
+# import numpy as np
+# from keras.models import Sequential
+# from keras.layers import Dense
+#
+# # Training data
+# data = np.random.random((1000,20)) # training
+# labels = np.random.randint(2,size=(1000,1)) # output
+#
+# # Testing data
+# x_test = np.random.random((100, 20))
+# y_test = np.random.randint(2, size=(100, 1))
+# # print(labels)
+#
+# model = Sequential()
+# model.add(Dense(32, activation='relu', input_dim=20))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(4, activation='relu'))
+# model.add(Dense(1, activation='sigmoid'))
+# model.compile(optimizer='rmsprop',
+#               loss='binary_crossentropy', metrics=['accuracy'])
+# model.fit(data, labels,epochs=10,batch_size=32) # train
+# predictions = model.predict(data)
+# # print(predictions)
+# # print(labels)
+#
+# # if we want to evaluate the model's performance
+# loss_and_metrics = model.evaluate(x_test, y_test, batch_size=128)
+# print(loss_and_metrics)
+#
+# # if we want to test the model on a batch
+# x_batch = np.random.random((100,20))
+# y_batch = np.random.randint(2, size=(100, 1))
+# results = test_on_batch(x_batch, y_batch)
+# print(results)
