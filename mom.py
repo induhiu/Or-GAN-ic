@@ -13,16 +13,16 @@ class Mom:
     def __init__(self, alphabet, signs):
         self.alphabet = alphabet
         self.signs = signs
-        self.ASCIIsigns = []
-        ASCIIstr = ''
-        for word in signs:
-            for letter in word:
-                temp = str(ord(letter))
-                while len(temp) < 3:
-                    temp = '0' + temp
-                ASCIIstr += temp
-            self.ASCIIsigns.append(ASCIIstr)
-            ASCIIstr = ''
+        # self.ASCIIsigns = []
+        # ASCIIstr = ''
+        # for word in signs:
+        #     for letter in word:
+        #         temp = str(ord(letter))
+        #         while len(temp) < 3:
+        #             temp = '0' + temp
+        #         ASCIIstr += temp
+        #     self.ASCIIsigns.append(ASCIIstr)
+        #     ASCIIstr = ''
 
         # each word will be 9 characters
         self.size = 9
@@ -34,22 +34,21 @@ class Mom:
         used = []
 
         # create word for each sign
-        for s in self.ASCIIsigns:
+        for s in self.signs:
 
             # avoid overlap
             n = secrets.randbelow(len(self.alphabet) ** self.size)
             while n in used: n = secrets.randbelow(len(self.alphabet) ** self.size)
             used.append(n)
 
-            self.dictionary[n] = s
-            # # create a bitstring with the given alphabet
-            # word = convertToBase(n, len(self.alphabet), self.alphabet)
-            # # leading "zeros"
-            # while len(word) < self.size:
-            #     word = self.alphabet[0] + word
-            #
-            # # update dictionary
-            # self.dictionary[word] = s
+            # create a bitstring with the given alphabet
+            word = convertToBase(n, len(self.alphabet), self.alphabet)
+            # leading "zeros"
+            while len(word) < self.size:
+                word = self.alphabet[0] + word
+
+            # update dictionary
+            self.dictionary[word] = s
 
     def __str__(self):
         """ Provide information about this mom. """
@@ -59,6 +58,13 @@ class Mom:
                + str(self.alphabet) + '. ' + "I have " + str(len(self.signs)) +
                " signs: " + str(self.signs) + '.')
 
+def convertToBase(n, base, alphabet):
+    """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
+        pythondsConvertinganIntegertoaStringinAnyBase.html """
+    if n < base:
+        return alphabet[n]
+    else:
+        return convertToBase(n // base, base, alphabet) + alphabet[n % base]
 
 # def main():
 #     # Change to fill array with any other values.

@@ -8,25 +8,47 @@ import numpy as np
 import random
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.utils import to_categorical
 
 def trainMoms(mum1, mum2):
 
     model = Sequential()
-    model.add(Dense(mum1.size, activation='relu', input_shape=(1,)))
+    model.add(Dense(mum1.size, activation='relu', input_dim=9))
     model.add(Dense(mum1.size // 2, activation='relu'))
     model.add(Dense(len(mum1.signs), activation='softmax'))
 
+    x_train = np.empty((len(mum1.signs), len(list(mum1.dictionary.keys())[0])))
+    prettierX = np.empty((len(mum1.signs), len(list(mum1.dictionary.keys())[0])), dtype='str')
+    # x_train = np.array(list(mum1.dictionary.keys())).reshape(len(mum1.signs), 1)
+    for word in range(len(mum1.dictionary.keys())):
+        for letter in range(len(list(mum1.dictionary.keys())[0])):
+            x_train[word][letter] = ord(list(mum1.dictionary.keys())[word][letter])
+            prettierX[word][letter] = list(mum1.dictionary.keys())[word][letter]
+    print(x_train)
+
+
+    a = np.array(list(mum1.dictionary.values()))
+    y_train = a.reshape(len(mum1.signs), 1)
+
+    # y_train = to_categorical(b)
+    y_range = np.arange(0, len(y_train)).reshape(len(mum1.signs), 1)
+    print(y_range)
+
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    print(np.array(list(mum1.dictionary.keys())).reshape(len(mum1.signs), 1))
+    model.fit(x_train, y_range, epochs=100, batch_size=1)
+    # for letter in range(len(ran)):
+    #
+    # pred = model.predict(np.array([ran]))
 
-    model.fit(np.array(list(mum1.dictionary.keys())).reshape(len(mum1.signs), 1),
-              np.array(list(mum1.dictionary.values())).reshape(len(mum1.signs), 1),
-              epochs=1, batch_size=1, verbose=1)
+    # print(np.array([[ran[letter] for letter in range(len(ran))]]))
 
     ran = random.choice(list(mum1.dictionary.keys()))
-    pred = model.predict(ran)
-    print(pred)
+    pred = model.predict(np.array(([[ord(ran[letter]) for letter in range(len(ran))]])))
+    print("List of fake words:", '\n', prettierX)
+    print("List of real words:", '\n', y_train)
+    print("Random word:", ran)
+    print("My prediction:", pred)
 
 def convertToBase(n, base, alphabet):
     """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
@@ -46,8 +68,6 @@ def main():
     mum2 = mom.Mom(alphabet, signs)
 
     trainMoms(mum1, mum2)
-    print(mom.Mom(alphabet, signs))
-
 
 
 if __name__ == '__main__':
