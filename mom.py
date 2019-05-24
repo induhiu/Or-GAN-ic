@@ -71,11 +71,11 @@ def convertToBase(n, base, alphabet):
     else:
         return convertToBase(n // base, base, alphabet) + alphabet[n % base]
 
-def main():
-    # Change to fill array with any other values.
-    # There can an arbitrarily large alphabet and up to 512 signs.
-    mom = Mom(['a', 'b', 'c', 'd', 'e', 'f'], ['kenny', 'ian', 'dave', 'decker'])
-    print(mom)
+# def main():
+#     # Change to fill array with any other values.
+#     # There can an arbitrarily large alphabet and up to 512 signs.
+#     mom = Mom(['a', 'b', 'c', 'd', 'e', 'f'], ['kenny', 'ian', 'dave', 'decker'])
+#     print(mom)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
