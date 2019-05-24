@@ -42,10 +42,10 @@ def main():
     alphabet = ['a', 'b', 'c', 'd', 'e', 'f']
     signs = ['kenny', 'ian', 'dave', 'decker']
     #
-    # mum1 = mom.Mom(alphabet, signs)
-    # mum2 = mom.Mom(alphabet, signs)
-    #
-    # trainMoms(mum1, mum2)
+    mum1 = mom.Mom(alphabet, signs)
+    mum2 = mom.Mom(alphabet, signs)
+
+    trainMoms(mum1, mum2)
     print(mom.Mom(alphabet, signs))
 
 
