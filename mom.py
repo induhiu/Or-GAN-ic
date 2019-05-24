@@ -43,8 +43,11 @@ class Mom:
 
             # create a bitstring with the given alphabet
             bits = convertToBase(n, len(self.alphabet), self.alphabet)
+            # leading "zeros"
             while len(bits) < self.size:
                 bits = self.alphabet[0] + bits
+
+            # convert to array
             for ch in range(len(bits)):
                 logo.L[ch // self.dim[0]][ch % self.dim[0]] = bits[ch]
 
