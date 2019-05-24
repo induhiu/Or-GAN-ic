@@ -1,8 +1,8 @@
 """
 Early implementation of a "mom" inventing a "language." The "mom" will then
-teach the language to a "baby." This "mom" uses NumPy arrays of two characters
+teach the language to a "baby." This "mom" uses NumPy arrays of characters
 to represent various English words.
-Implementation by Kenny Talarico, 5/23/2019.
+Implementation by Kenny Talarico, May 2019.
 """
 import numpy as np
 import secrets
