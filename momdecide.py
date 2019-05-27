@@ -12,36 +12,35 @@ def talk(mom1, mom2):
     speaker = mom1
     listener = mom2
     while mom1.dictionary != mom2.dictionary:
-        print(mom1.dictionary)
-        print(mom2.dictionary)
+        # print(mom1.dictionary)
+        # print(mom2.dictionary)
 
         mystery = speaker.speak()
         guess = listener.guess(mystery)
 
-        print(listener.dictionary[guess], speaker.dictionary[mystery])
+        # print(listener.dictionary[guess])
+
+        # print(listener.dictionary[guess], speaker.dictionary[mystery])
 
         if listener.dictionary[guess] == speaker.dictionary[mystery]:
             newmystery = mystery
             newguess = guess
-            print(newmystery)
-            print(newguess)
             for ch in range(len(mystery)):
-                while newmystery[ch] != newguess[ch]:
-                    newmystery = newmystery[:ch] + choice(alphabet) + newmystery[ch+1:]
-                    newguess = newguess[:ch] + choice(alphabet) + newguess[ch+1:]
-                    # print(newmystery)
-                    # print(newguess)
+                if newmystery[ch] != newguess[ch]:
+                    if choice([speaker, listener]) == speaker:
+                        newmystery = newmystery[:ch] + guess[ch] + newmystery[ch+1:]
+                    else:
+                        newguess = newguess[:ch] + mystery[ch] + newguess[ch+1:]
             speaker.dictionary[newmystery] = speaker.dictionary.pop(mystery)
             listener.dictionary[newguess] = listener.dictionary.pop(guess)
         else:
             ran = randbelow(len(guess))
-
-            # while guess[ran] != mystery[ran]:
-            #     print(guess[ran], mystery[ran])
-            #     ran = randbelow(len(guess))
-            newguess = guess[:ran] + choice(alphabet) + guess[ran+1:]
-
-            print(guess, 'changing to', newguess)
+            #
+            while guess[ran] == mystery[ran]:
+                ran = randbelow(len(guess))
+            newguess = guess[:ran] + mystery[ran] + guess[ran+1:]
+            #
+            # print(guess, 'changing to', newguess)
 
         oldspeaker = speaker
         speaker = listener

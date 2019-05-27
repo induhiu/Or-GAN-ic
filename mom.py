@@ -62,7 +62,8 @@ class Mom:
     def guess(self, mystery):
         lowest = list(self.dictionary.keys())[0]
         for word in self.dictionary:
-            if (hammingDistance(self.dictionary[lowest], mystery) <
+            print(hammingDistance(self.dictionary[lowest], mystery))
+            if (hammingDistance(self.dictionary[lowest], mystery) >
                 hammingDistance(self.dictionary[word], mystery)):
                lowest = word
         return word
