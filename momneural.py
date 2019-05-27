@@ -13,9 +13,16 @@ from tensorflow.keras.utils import to_categorical
 def trainMoms(mum1, mum2):
 
     model = Sequential()
-    model.add(Dense(mum1.size, activation='relu', input_dim=9))
-    model.add(Dense(mum1.size // 2, activation='relu'))
-    model.add(Dense(len(mum1.signs), activation='softmax'))
+    model.add(Dense(mum1.size, activation='sigmoid', input_dim=9))
+    model.add(Dense(mum1.size - 1, activation='sigmoid'))  # all others were relu
+    model.add(Dense(mum1.size - 2, activation='sigmoid'))
+    model.add(Dense(mum1.size - 3, activation='sigmoid'))
+    # model.add(Dense(mum1.size - 4, activation='relu'))
+    # model.add(Dense(mum1.size - 5, activation='relu'))
+    # model.add(Dense(mum1.size - 6, activation='relu'))
+    # model.add(Dense(mum1.size - 7, activation='relu'))
+    # model.add(Dense(mum1.size - 8, activation='relu'))
+    model.add(Dense(len(mum1.signs), activation='softmax'))  # was softmax
 
     x_train = np.empty((len(mum1.signs), len(list(mum1.dictionary.keys())[0])))
     prettierX = np.empty((len(mum1.signs), len(list(mum1.dictionary.keys())[0])), dtype='str')
@@ -24,7 +31,7 @@ def trainMoms(mum1, mum2):
         for letter in range(len(list(mum1.dictionary.keys())[0])):
             x_train[word][letter] = ord(list(mum1.dictionary.keys())[word][letter])
             prettierX[word][letter] = list(mum1.dictionary.keys())[word][letter]
-    print(x_train)
+    # print(x_train)
 
 
     a = np.array(list(mum1.dictionary.values()))
@@ -32,7 +39,7 @@ def trainMoms(mum1, mum2):
 
     # y_train = to_categorical(b)
     y_range = np.arange(0, len(y_train)).reshape(len(mum1.signs), 1)
-    print(y_range)
+    # print(y_range)
 
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
