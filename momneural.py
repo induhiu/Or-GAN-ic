@@ -37,13 +37,14 @@ def trainMoms(mum1, mum2):
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     model.fit(x_train, y_range, epochs=100, batch_size=1)
+
+    ran = random.choice(list(mum1.dictionary.keys()))
     # for letter in range(len(ran)):
     #
     # pred = model.predict(np.array([ran]))
 
     # print(np.array([[ran[letter] for letter in range(len(ran))]]))
 
-    ran = random.choice(list(mum1.dictionary.keys()))
     pred = model.predict(np.array(([[ord(ran[letter]) for letter in range(len(ran))]])))
     print("List of fake words:", '\n', prettierX)
     print("List of real words:", '\n', y_train)
