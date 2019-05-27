@@ -31,6 +31,8 @@ def talk(mom1, mom2):
                         newmystery = newmystery[:ch] + guess[ch] + newmystery[ch+1:]
                     else:
                         newguess = newguess[:ch] + mystery[ch] + newguess[ch+1:]
+            print(mom1.dictionary)
+            print(mom2.dictionary)
             speaker.dictionary[newmystery] = speaker.dictionary.pop(mystery)
             listener.dictionary[newguess] = listener.dictionary.pop(guess)
         else:
