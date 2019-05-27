@@ -13,15 +13,8 @@ from tensorflow.keras.utils import to_categorical
 def trainMoms(mum1, mum2):
 
     model = Sequential()
-    model.add(Dense(mum1.size, activation='sigmoid', input_dim=9))
-    model.add(Dense(mum1.size - 1, activation='sigmoid'))  # all others were relu
-    model.add(Dense(mum1.size - 2, activation='sigmoid'))
-    model.add(Dense(mum1.size - 3, activation='sigmoid'))
-    # model.add(Dense(mum1.size - 4, activation='relu'))
-    # model.add(Dense(mum1.size - 5, activation='relu'))
-    # model.add(Dense(mum1.size - 6, activation='relu'))
-    # model.add(Dense(mum1.size - 7, activation='relu'))
-    # model.add(Dense(mum1.size - 8, activation='relu'))
+    model.add(Dense(mum1.size, activation='relu', input_dim=9))
+    model.add(Dense(mum1.size + 5, activation='relu'))
     model.add(Dense(len(mum1.signs), activation='softmax'))  # was softmax
 
     x_train = np.empty((len(mum1.signs), len(list(mum1.dictionary.keys())[0])))
@@ -69,12 +62,14 @@ def main():
     # Change to fill array with any other values.
     # There can an arbitrarily large alphabet and up to len(alphabet)^2 signs.
     alphabet = ['a', 'b', 'c', 'd', 'e', 'f']
-    signs = ['kenny', 'ian', 'dave', 'decker']
-    #
+    # signs = ['kenny', 'ian', 'dave', 'decker']
+    signs = [
     mum1 = mom.Mom(alphabet, signs)
     mum2 = mom.Mom(alphabet, signs)
 
-    trainMoms(mum1, mum2)
+    print(mum1)
+
+    # trainMoms(mum1, mum2)
 
 
 if __name__ == '__main__':
