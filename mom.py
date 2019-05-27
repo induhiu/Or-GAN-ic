@@ -6,6 +6,7 @@ Implementation by Kenny Talarico, May 2019.
 """
 import numpy as np
 import secrets
+from random import choice
 
 
 class Mom:
@@ -58,13 +59,28 @@ class Mom:
                + str(self.alphabet) + '. ' + "I have " + str(len(self.signs)) +
                " signs: " + str(self.signs) + '.')
 
+    def guess(self, mystery):
+        lowest = list(self.dictionary.keys())[0]
+        for word in self.dictionary:
+            if (hammingDistance(self.dictionary[lowest], mystery) <
+                hammingDistance(self.dictionary[word], mystery)):
+               lowest = word
+        return word
+
+    def speak(self):
+        return choice(list(self.dictionary.keys()))
+
+
+def hammingDistance(str1, str2):
+    ham = len(str1)
+    for ch in range(len(str1)):
+         if str1[ch] == str2[ch]: ham -= 1
+    return ham
+
 def convertToBase(n, base, alphabet):
     """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
         pythondsConvertinganIntegertoaStringinAnyBase.html """
-    if n < base:
-        return alphabet[n]
-    else:
-        return convertToBase(n // base, base, alphabet) + alphabet[n % base]
+    return (alphabet[n] if n < base else convertToBase(n // base, base, alphabet) + alphabet[n % base])
 
 # def main():
 #     # Change to fill array with any other values.

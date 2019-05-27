@@ -58,14 +58,6 @@ def trainMoms(mum1, mum2):
     print("Random word:", ran)
     print("My prediction:", pred)
 
-def convertToBase(n, base, alphabet):
-    """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
-        pythondsConvertinganIntegertoaStringinAnyBase.html """
-    if n < base:
-        return alphabet[n]
-    else:
-        return convertToBase(n // base, base, alphabet) + alphabet[n % base]
-
 def main():
     # Change to fill array with any other values.
     # There can an arbitrarily large alphabet and up to len(alphabet)^2 signs.
