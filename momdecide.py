@@ -12,17 +12,37 @@ def talk(mom1, mom2):
     speaker = mom1
     listener = mom2
     while mom1.dictionary != mom2.dictionary:
+        print(mom1.dictionary)
+        print(mom2.dictionary)
+
         mystery = speaker.speak()
         guess = listener.guess(mystery)
+
+        print(listener.dictionary[guess], speaker.dictionary[mystery])
+
         if listener.dictionary[guess] == speaker.dictionary[mystery]:
+            newmystery = mystery
+            newguess = guess
+            print(newmystery)
+            print(newguess)
             for ch in range(len(mystery)):
-                while mystery[ch] != guess[ch]:
-                    mystery = mystery[:ch] + choice(alphabet) + mystery[ch:]
-                    guess = guess[:ch] + choice(alphabet) + mystery[ch:]
+                while newmystery[ch] != newguess[ch]:
+                    newmystery = newmystery[:ch] + choice(alphabet) + newmystery[ch+1:]
+                    newguess = newguess[:ch] + choice(alphabet) + newguess[ch+1:]
+                    # print(newmystery)
+                    # print(newguess)
+            speaker.dictionary[newmystery] = speaker.dictionary.pop(mystery)
+            listener.dictionary[newguess] = listener.dictionary.pop(guess)
         else:
             ran = randbelow(len(guess))
-            newguess = guess[:ran] + choice(alphabet) + guess[ran:]
-            listener.dictionary[newguess] = listener.dictionary.pop(guess)
+
+            # while guess[ran] != mystery[ran]:
+            #     print(guess[ran], mystery[ran])
+            #     ran = randbelow(len(guess))
+            newguess = guess[:ran] + choice(alphabet) + guess[ran+1:]
+
+            print(guess, 'changing to', newguess)
+
         oldspeaker = speaker
         speaker = listener
         listener = oldspeaker
@@ -35,6 +55,16 @@ def main():
     talk(mom1, mom2)
     print(mom1.dictionary)
     print(mom2.dictionary)
+    #
+    # word1 = 'abcdef'
+    # word2 = 'fedcba'
+    # for ch in range(len(word1)):
+    #     while word1[ch] != word2[ch]:
+    #         word1 = word1[:ch] + choice(alphabet) + word1[ch+1:]
+    #         word2 = word2[:ch] + choice(alphabet) + word2[ch+1:]
+    #
+    # print(word1, word2)
+
 
 
 if __name__ == '__main__':
