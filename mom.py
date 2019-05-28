@@ -71,6 +71,12 @@ class Mom:
     def speak(self):
         return choice(list(self.dictionary.keys()))
 
+    def getValue(self, val):
+        for item in self.dictionary:
+            if self.dictionary[item] == val:
+                return item
+        return None
+
 
 def hammingDistance(str1, str2):
     ham = len(str1)
