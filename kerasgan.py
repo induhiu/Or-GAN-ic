@@ -115,7 +115,7 @@ def train(epochs=1, batch_size=128):
     for e in range(1, epochs+1):
         print('-'*15, 'Epoch %d' % e, '-'*15)
         for _ in tqdm(range(batch_count)):
-            # Get a random set of input noise and images
+            # Draws random samples from a normal(Gaussian) distribution
             noise = np.random.normal(0, 1, size=[batch_size, random_dim])
             image_batch = x_train[np.random.randint(0, x_train.shape[0], size=batch_size)]
 
