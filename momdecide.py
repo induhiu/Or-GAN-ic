@@ -5,8 +5,10 @@ import mom
 from random import choice
 from secrets import randbelow
 
-alphabet = ['0', '1']
-signs = ['kenny', 'ian', 'dave', 'decker']
+# alphabet = ['a', 'b', 'c','d', 'e', 'f']
+alphabet = ['b', 'a', 'd']
+signs = ['kenny', 'ian', 'dave', 'decker', 'danny', 'campbell', 'perkins', 'talarico',
+         'nduhiu', 'hamilton', 'wippman', 'science', 'python']
 def talk(mom1, mom2):
     # these will switch each iteration
     speaker = mom1
@@ -16,14 +18,14 @@ def talk(mom1, mom2):
     while mom1.dictionary != mom2.dictionary:
 
         # to ensure that there are no duplicate words
-        # for k in mom1.dictionary:
-        #     for l in mom2.dictionary:
-        #         while k == l and mom1.dictionary[k] != mom1.dictionary[l]:
-        #             change = choice([(mom1, k), (mom2, l)])
-        #             change[0].dictionary[change[1][:randbelow(len(change[1]))] +
-        #                                  choice(alphabet) +
-        #                                  change[1][randbelow(len(change[1]))+1:]] = \
-        #                                  change[0].dictionary.pop(change[1])
+        for k in mom1.dictionary:
+            for l in mom2.dictionary:
+                while k == l and mom1.dictionary[k] != mom1.dictionary[l]:
+                    change = choice([(mom1, k), (mom2, l)])
+                    change[0].dictionary[change[1][:randbelow(len(change[1]))] +
+                                         choice(alphabet) +
+                                         change[1][randbelow(len(change[1]))+1:]] = \
+                                         change[0].dictionary.pop(change[1])
 
 
         mystery = speaker.speak()
@@ -44,10 +46,10 @@ def talk(mom1, mom2):
             listener.dictionary[newguess] = listener.dictionary.pop(guess)
         # otherwise, randomly change a letter in the guess. This adds
         # unpredictability
-        else:
-            ran = randbelow(len(guess))
-            newguess = guess[:ran] + choice(alphabet) + guess[ran+1:]
-            listener.dictionary[newguess] = listener.dictionary.pop(guess)
+        # else:
+        #     ran = randbelow(len(guess))
+        #     newguess = guess[:ran] + choice(alphabet) + guess[ran+1:]
+        #     listener.dictionary[newguess] = listener.dictionary.pop(guess)
 
         # swap speaker/listener
         oldspeaker = speaker
@@ -69,9 +71,7 @@ def main():
     print()
     print("Generating...")
     talk(mom1, mom2)
-    print()
-    print()
-    print("---RESULTS---")
+    print('\n' + '\n' + "---RESULTS---")
 
     for k in list(mom1.dictionary.keys()):
         print(mom1.dictionary[k] + ': ' + (15 - len(mom1.dictionary[k])) * ' ' + k)

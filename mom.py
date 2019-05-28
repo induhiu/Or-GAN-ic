@@ -14,18 +14,6 @@ class Mom:
     def __init__(self, alphabet, signs):
         self.alphabet = alphabet
         self.signs = signs
-        # self.ASCIIsigns = []
-        # ASCIIstr = ''
-        # for word in signs:
-        #     for letter in word:
-        #         temp = str(ord(letter))
-        #         while len(temp) < 3:
-        #             temp = '0' + temp
-        #         ASCIIstr += temp
-        #     self.ASCIIsigns.append(ASCIIstr)
-        #     ASCIIstr = ''
-
-        # each word will be 9 characters
         self.size = 9
         self._createLanguage()
 
@@ -60,12 +48,11 @@ class Mom:
                " signs: " + str(self.signs) + '.')
 
     def guess(self, mystery):
-        # lowest = list(self.dictionary.keys())[0]
-        # for word in self.dictionary:
-        #     print(hammingDistance(self.dictionary[lowest], mystery))
-        #     if (hammingDistance(self.dictionary[lowest], mystery) >
-        #         hammingDistance(self.dictionary[word], mystery)):
-        #        lowest = word
+        lowest = list(self.dictionary.keys())[0]
+        for word in self.dictionary:
+            if (hammingDistance(self.dictionary[lowest], mystery) >
+                hammingDistance(self.dictionary[word], mystery)):
+               lowest = word
         return choice(list(self.dictionary.keys()))
 
     def speak(self):
@@ -88,12 +75,3 @@ def convertToBase(n, base, alphabet):
     """ Adapted from https://interactivepython.org/runestone/static/pythonds/Recursion/
         pythondsConvertinganIntegertoaStringinAnyBase.html """
     return (alphabet[n] if n < base else convertToBase(n // base, base, alphabet) + alphabet[n % base])
-
-# def main():
-#     # Change to fill array with any other values.
-#     # There can an arbitrarily large alphabet and up to 512 signs.
-#     mom = Mom(['a', 'b', 'c', 'd', 'e', 'f'], ['kenny', 'ian', 'dave', 'decker'])
-#     print(mom)
-
-# if __name__ == '__main__':
-#     main()
