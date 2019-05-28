@@ -5,9 +5,8 @@ import mom
 from random import choice
 from secrets import randbelow
 
-alphabet = ['a', 'b', 'c', 'd', 'e', 'f']
+alphabet = ['0', '1']
 signs = ['kenny', 'ian', 'dave', 'decker']
-
 def talk(mom1, mom2):
     # these will switch each iteration
     speaker = mom1
@@ -17,14 +16,14 @@ def talk(mom1, mom2):
     while mom1.dictionary != mom2.dictionary:
 
         # to ensure that there are no duplicate words
-        for k in mom1.dictionary:
-            for l in mom2.dictionary:
-                while k == l and mom1.dictionary[k] != mom1.dictionary[l]:
-                    change = choice([(mom1, k), (mom2, l)])
-                    change[0].dictionary[change[1][:randbelow(len(change[1]))] +
-                                         choice(alphabet) +
-                                         change[1][randbelow(len(change[1]))+1:]] = \
-                                         change[0].dictionary.pop(change[1])
+        # for k in mom1.dictionary:
+        #     for l in mom2.dictionary:
+        #         while k == l and mom1.dictionary[k] != mom1.dictionary[l]:
+        #             change = choice([(mom1, k), (mom2, l)])
+        #             change[0].dictionary[change[1][:randbelow(len(change[1]))] +
+        #                                  choice(alphabet) +
+        #                                  change[1][randbelow(len(change[1]))+1:]] = \
+        #                                  change[0].dictionary.pop(change[1])
 
 
         mystery = speaker.speak()
