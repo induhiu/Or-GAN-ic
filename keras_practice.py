@@ -66,35 +66,35 @@
 # model.fit(X_train, y_train,epochs=20, batch_size=1, verbose=1)
 
 # ''' ------------------------------------------------------------ '''
-
-import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense
-
-# Training data
-data = np.random.random((1000,20)) # training
-labels = np.random.randint(2,size=(1000,1)) # output
-
-# Testing data
-x_test = np.random.random((10, 20))
-y_test = np.random.randint(2, size=(10, 1))
-
-# print(labels)
-
-model = Sequential()
-model.add(Dense(32, activation='relu', input_dim=20))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
-model.compile(optimizer='rmsprop',
-              loss='binary_crossentropy', metrics=['accuracy'])
-model.fit(data, labels,epochs=10,batch_size=32) # train
-# if we want to evaluate the model's performance
-
-# if we want to test the model on a batch
-# x_batch = np.random.random((100,20))
-# y_batch = np.random.randint(2, size=(100, 1))
-pred = model.predict(x_test)
-print(pred)
+#
+# import numpy as np
+# from keras.models import Sequential
+# from keras.layers import Dense
+#
+# # Training data
+# data = np.random.random((1000,20)) # training
+# labels = np.random.randint(2,size=(1000,1)) # output
+#
+# # Testing data
+# x_test = np.random.random((10, 20))
+# y_test = np.random.randint(2, size=(10, 1))
+#
+# # print(labels)
+#
+# model = Sequential()
+# model.add(Dense(32, activation='relu', input_dim=20))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(1, activation='sigmoid'))
+# model.compile(optimizer='rmsprop',
+#               loss='binary_crossentropy', metrics=['accuracy'])
+# model.fit(data, labels,epochs=10,batch_size=32) # train
+# # if we want to evaluate the model's performance
+#
+# # if we want to test the model on a batch
+# # x_batch = np.random.random((100,20))
+# # y_batch = np.random.randint(2, size=(100, 1))
+# pred = model.predict(x_test)
+# print(pred)
 
 
 # '''--------------------------------------------------------------------------'''
