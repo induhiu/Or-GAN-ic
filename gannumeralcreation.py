@@ -4,6 +4,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import sys
 
 import tensorflow
 
@@ -26,22 +27,31 @@ random_dim = 100
 
 class GAN:
 
-    def __init__(self, random_dim):
+    def __init__(self, random_dim, x=0, y=0):
         self.O = Adam(lr=0.0002, beta_1=0.5)
         self.D = get_discriminator(self.O)
         self.G = get_generator(self.O)
 
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
+        self.curr_x_train, self.curr_y_train = x, y
 
         self.GAN = Model(inputs=self.input, outputs=self.output)
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O)
 
-    def train(self, epochs=1, batch_size=128):
+    def train(self, epochs=1, batch_size=128, data_loaded=False):
         # Get the training and testing data
-        x_train, y_train, x_test, y_test = load_minst_data()
+        x_train, y_train, x_test, y_test = 0, 0, 0, 0
+        if data_loaded:
+            x_train, y_train = self.curr_x_train, self.curr_y_train
+            # x_train = reshape_x(x_train)
+        else:
+            x_train, y_train, x_test, y_test = load_minst_data()
         # Split the training data into batches of size 128
-        batch_count = x_train.shape[0] // batch_size
+        if x_train.shape[0] >= 128:
+            batch_count = x_train.shape[0] // batch_size
+        else:
+            batch_count = 1
 
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % e, '-'*15)
@@ -49,6 +59,7 @@ class GAN:
                 # Get a random set of input noise and images
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
                 image_batch = x_train[np.random.randint(0, x_train.shape[0], size=batch_size)]
+                image_batch = image_batch.reshape(128, 784)  # remove later
 
                 # Generate fake MNIST images
                 generated_images = self.G.predict(noise)
@@ -69,7 +80,7 @@ class GAN:
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
 
-            plot_generated_images(e, self.G)
+            plot_generated_images(e, self.G, self)
 
     def toggleDTrain(self):
         self.D.trainable = not self.D.trainable
@@ -78,11 +89,17 @@ def load_minst_data():
     # load the data
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     # normalize our inputs to be in the range[-1, 1]
+    x_train = reshape_x(x_train)
+    return (x_train, y_train, x_test, y_test)
+
+def reshape_x(x_train):
+    # normalize our inputs to be in the range[-1, 1]
     x_train = (x_train.astype(np.float32) - 127.5)/127.5
     # convert x_train with a shape of (60000, 28, 28) to (60000, 784) so we have
     # 784 columns per row
     x_train = x_train.reshape(60000, 784)
-    return (x_train, y_train, x_test, y_test)
+    return x_train
+
 
 def get_generator(optimizer):
     G = Sequential()
@@ -121,11 +138,14 @@ def get_discriminator(optimizer):
     return D
 
 # Create a wall of generated MNIST images
-def plot_generated_images(epoch, generator, examples=100, dim=(10, 10), figsize=(10, 10)):
+def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
     generated_images = generator.predict(noise)
+    # print(type(generated_images))
+    # print("this is generated images")
+    # print(generated_images)
     generated_images = generated_images.reshape(examples, 28, 28)
-
+    GAN.curr_x_train = generated_images
     plt.figure(figsize=figsize)
     for i in range(generated_images.shape[0]):
         plt.subplot(dim[0], dim[1], i+1)
@@ -136,7 +156,11 @@ def plot_generated_images(epoch, generator, examples=100, dim=(10, 10), figsize=
 
 def main():
     gan = GAN(random_dim)
-    gan.train(2, 128)
+    gan.train(5, 128)
+    gan2 = GAN(random_dim, gan.curr_x_train, gan.curr_y_train)
+    gan2.train(2, 128, True)
+    # gan3 = GAN(random_dim, gan2.curr_x_train, gan2.curr_y_train)
+    # gan3.train(1, 128, True)
 
 if __name__ == "__main__":
     main()
