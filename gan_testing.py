@@ -25,11 +25,11 @@ def get_words():
 def score(original, prediction):
     ''' Scores our prediction by checking for values within 20 % '''
     in_original = 0
-    for val in prediction:
-        percentages = np.array([abs(val / x) for x in original])
-        check_lst = list((0.8 <= percentages ) or (percentages <= 1.2))
-        if True in check_lst:
-            in_original += 1
+    for val in range(len(prediction)):
+        percentages = np.array([abs(prediction[val] / x) for x in original])
+        for p in percentages:
+            if 0.8 <= p <= 1.2:
+                in_original += 1
     return in_original / len(prediction)
 
 def main():
