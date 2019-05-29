@@ -37,9 +37,9 @@ def load_data():
     y_test = np.random.randint(1, n, size=(100))
     return (x_train, y_train, x_test, y_test)
 
-def predict(generator, test_data):
+def predict(generator, n=factorial(9)):
     ''' Returns a prediction that will be used to score the model '''
-    return generator.predict(test_data)
+    return generator.predict(np.random.normal(n/2, n/4, size=[random_dim, random_dim]))
 
 # You will use the Adam optimizer
 def get_optimizer():
@@ -134,7 +134,7 @@ def train(epochs=1, batch_size=128):
             y_gen = np.ones(batch_size) # not sure if this should be kept
             discriminator.trainable = False
             gan.train_on_batch(noise, y_gen)
-    print("Done")    
+    print("Done")
 
 
 if __name__ == '__main__':
