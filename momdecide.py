@@ -5,10 +5,9 @@ import mom
 from random import choice
 from secrets import randbelow
 
-# alphabet = ['a', 'b', 'c','d', 'e', 'f']
-alphabet = ['b', 'a', 'd']
-signs = ['kenny', 'ian', 'dave', 'decker', 'danny', 'campbell', 'perkins', 'talarico',
-         'nduhiu', 'hamilton', 'wippman', 'science', 'python']
+alphabet = ['a', 'i', 'b', 'p']
+signs = ['kenny', 'ian', 'dave', 'decker']
+
 def talk(mom1, mom2):
     # these will switch each iteration
     speaker = mom1
@@ -44,17 +43,12 @@ def talk(mom1, mom2):
                         newguess = newguess[:ch] + mystery[ch] + newguess[ch+1:]
             speaker.dictionary[newmystery] = speaker.dictionary.pop(mystery)
             listener.dictionary[newguess] = listener.dictionary.pop(guess)
-        # otherwise, randomly change a letter in the guess. This adds
-        # unpredictability
-        # else:
-        #     ran = randbelow(len(guess))
-        #     newguess = guess[:ran] + choice(alphabet) + guess[ran+1:]
-        #     listener.dictionary[newguess] = listener.dictionary.pop(guess)
 
         # swap speaker/listener
         oldspeaker = speaker
         speaker = listener
         listener = oldspeaker
+
 
 def main():
     mom1 = mom.Mom(alphabet, signs)
@@ -68,14 +62,12 @@ def main():
         print(k + ':' + (13 - len(k)) * ' ' + displayDict[k][0] +
               (27 - len(displayDict[k][0])) * ' ' + displayDict[k][1])
 
-    print()
-    print("Generating...")
+    print('\n' + "Generating...")
     talk(mom1, mom2)
     print('\n' + '\n' + "---RESULTS---")
 
     for k in list(mom1.dictionary.keys()):
         print(mom1.dictionary[k] + ': ' + (15 - len(mom1.dictionary[k])) * ' ' + k)
-
 
 
 if __name__ == '__main__':
