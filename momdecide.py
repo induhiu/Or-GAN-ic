@@ -5,7 +5,7 @@ import mom
 from random import choice
 from secrets import randbelow
 
-alphabet = ['a', 'i', 'b', 'p']
+alphabet = ['0', '1', '2', '3', '4', '5']
 signs = ['kenny', 'ian', 'dave', 'decker']
 
 def talk(mom1, mom2):
@@ -51,8 +51,8 @@ def talk(mom1, mom2):
 
 
 def main():
-    mom1 = mom.Mom(alphabet, signs)
-    mom2 = mom.Mom(alphabet, signs)
+    mom1 = mom.Mom(alphabet[:len(alphabet)//2], signs)
+    mom2 = mom.Mom(alphabet[len(alphabet)//2:], signs)
 
     displayDict = {mom1.dictionary[key]: (key, mom2.getValue(mom1.dictionary[key])) for key in mom1.dictionary}
 
