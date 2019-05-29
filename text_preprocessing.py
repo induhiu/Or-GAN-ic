@@ -32,9 +32,7 @@ def main():
 
     # Using one hot encoding, which returns a list of integers that
     # represent our string, but encoded.
-    encoded = keras.preprocessing.text.one_hot(string, n,
-                                    filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n',
-                                    lower=False, split=' ')
+    encoded = keras.preprocessing.text.one_hot(string, n, filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', lower=False, split=' ')
     print(encoded)
 
     # # Using text to word sequence, let's see how this goes
