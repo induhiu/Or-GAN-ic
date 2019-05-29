@@ -6,6 +6,7 @@ import keras
 import numpy as np
 from math import factorial
 import random
+import sys
 
 # Let Keras know that we are using tensorflow as our backend engine
 os.environ["KERAS_BACKEND"] = "tensorflow"

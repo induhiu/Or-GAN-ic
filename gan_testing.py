@@ -1,11 +1,13 @@
-alphabets = 'abcdefghijklmnopqrstuvwxyz'
-
 from math import factorial
+from collections import Counter
+import itertools
 import random
 import language_gan
 import keras
 import os
 import tensorflow
+import numpy as np
+import sys
 
 os.environ['KERAS_BACKEND'] = "tensorflow"
 
@@ -14,17 +16,38 @@ def get_words():
     with open('english_words.txt') as english_words:
         list_of_words = english_words.readlines()
     list_of_words = [word[: -1] for word in list_of_words]
-    chosen_words = [random.choice(list_of_words) for _ in range(10000)]
+    random_words = [random.choice(list_of_words) for _ in range(78400)]
     encoded = [keras.preprocessing.text.one_hot(x, factorial(9),
                filters='!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n', lower=False,
-               split=' ') for x in chosen_words]
-    return (chosen_words, encoded)
+               split=' ') for x in random_words]
+    return (random_words, encoded)
 
-
-
+def score(original, prediction):
+    ''' Scores our prediction by checking for values within 20 % '''
+    in_original = 0
+    for val in prediction:
+        percentages = np.array([abs(val / x) for x in original])
+        check_lst = list((0.8 <= percentages ) or (percentages <= 1.2))
+        if True in check_lst:
+            in_original += 1
+    return in_original / len(prediction)
 
 def main():
     ''' Main function '''
     words, one_hot_encoding = get_words()
-    print(words)
-    print(one_hot_encoding)
+    ones = [-1, 1]
+    one_hot_encoding = list(itertools.chain.from_iterable(one_hot_encoding))
+    lst_one_hot_encoding = [((x / factorial(9)) * random.choice(ones)) for x in one_hot_encoding]
+    np_one_hot_encoding = np.array(lst_one_hot_encoding).reshape(100, 784)
+    my_gan = language_gan.GAN(np_one_hot_encoding)
+    my_gan.train()
+    prediction = my_gan.predict()
+    # # print(prediction)
+    lst_prediction = list(prediction)
+    lst_prediction = list(itertools.chain.from_iterable([list(x) for x in lst_prediction]))
+    gan_score = score(lst_one_hot_encoding, lst_prediction)
+    print(gan_score)
+
+
+if __name__ == '__main__':
+    main()
