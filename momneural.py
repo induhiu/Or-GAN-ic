@@ -56,7 +56,7 @@ def main():
     # There can an arbitrarily large alphabet and up to len(alphabet)^2 signs.
     alphabet = ['a', 'b', 'c', 'd', 'e', 'f']
     # signs = ['kenny', 'ian', 'dave', 'decker']
-    signs = [
+    signs = []
     mum1 = mom.Mom(alphabet, signs)
     mum2 = mom.Mom(alphabet, signs)
 
