@@ -30,6 +30,8 @@ def score(original, prediction):
                                 if 0.995 <= abs(prediction[val] / x) <= 1.005])
         print(percentages)
         input()
+        if len(percentages) > 1:
+            in_original += 1
         # for p in percentages:
         #     if 0.9995 <= p <= 1.0005:
         #         in_original += 1
