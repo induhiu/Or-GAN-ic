@@ -13,27 +13,9 @@ from tensorflow.keras import preprocessing
 
 class WordIdentifier:
 
-    def __init__(self):
-        self.dict = {line[line.rfind(' ')+1:]: line[:line.rfind(' ')].split() for line in
-                     [w[:-1] for w in open('momwords.txt', 'r').readlines()]}
+    def __init__(self, lin):
+        self.dict = {line[line.rfind(' ')+1:]: line[:line.rfind(' ')].split() for line in lin}
 
-        # keys = [preprocessing.text.one_hot(k, 2000000)[0] for k in list(dict.keys())]
-        # vals = [preprocessing.text.one_hot(v, 2000000)[0] for v in list(dict.values())]
-        #
-        # newDict = {keys[i]: vals[i] for i in range(len(keys))}
-        #
-        # model = Sequential()
-        # model.add(Dense(10, activation='relu', input_dim=1))
-        # model.add(Dense(6 + len(dict), activation='relu'))
-        # model.add(Dense(len(dict), activation='softmax'))
-        #
-        # xtrain, ytrain = np.array(list(newDict.keys())), np.array(list(newDict.values()))
-        #
-        # ytrain = np.arange(0, len(ytrain)).reshape(len(keys), 1)
-        #
-        # model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['sparse_categorical_accuracy'])
-        #
-        # model.fit(xtrain, ytrain, epochs=10, batch_size=5)
 
     def __str__(self):
         return self.dict
@@ -48,7 +30,3 @@ class WordIdentifier:
             for v in self.dict[k]:
                 print(v, end=' | ')
             print()
-
-
-if __name__ == '__main__':
-    main()

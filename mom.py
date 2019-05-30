@@ -26,8 +26,8 @@ class Mom:
 
             # avoid overlap
             n = secrets.randbelow(len(self.alphabet) ** self.size)
-            while n in used: n = secrets.randbelow(len(self.alphabet) ** self.size)
-            used.append(n)
+            # while n in used: n = secrets.randbelow(len(self.alphabet) ** self.size)
+            # used.append(n)
 
             # create a bitstring with the given alphabet
             word = convertToBase(n, len(self.alphabet), self.alphabet)
@@ -37,11 +37,14 @@ class Mom:
             # update dictionary
             self.dictionary[s] = (word,)
 
-            for _ in range(self.familysize):
+            for _ in range(self.familysize-1):
                 n = secrets.randbelow(len(word))
                 self.dictionary[s] += (word[:n] + choice(self.alphabet) + word[n+1:],)
 
-    def output(self, file):
+    def output(self, file=None):
+        if not file:
+            return [' '.join(self.dictionary[k]) + ' ' + k for k in list(self.dictionary.keys())]
+
         f = open(file, 'w')
         [f.write(' '.join(self.dictionary[k]) + ' ' + k + '\n') for k in list(self.dictionary.keys())]
         f.close()
