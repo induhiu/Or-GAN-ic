@@ -30,7 +30,8 @@ def score(original, prediction):
         for p in percentages:
             if 0.8 <= p <= 1.2:
                 in_original += 1
-    return in_original / len(prediction)
+                break
+    return in_original
 
 def main():
     ''' Main function '''
@@ -45,7 +46,8 @@ def main():
     # # print(prediction)
     lst_prediction = list(prediction)
     lst_prediction = list(itertools.chain.from_iterable([list(x) for x in lst_prediction]))
-    gan_score = score(lst_one_hot_encoding, lst_prediction)
+    sample = [random.choice(lst_prediction) for _ in range(10)]
+    gan_score = score(lst_one_hot_encoding, sample)
     print(gan_score)
 
 
