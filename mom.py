@@ -9,10 +9,11 @@ from random import choice
 
 class Mom:
 
-    def __init__(self, alphabet, signs):
+    def __init__(self, alphabet, signs, wordlength=8, familysize=1):
         self.alphabet = alphabet
         self.signs = signs
-        self.size = 9
+        self.size = wordlength
+        self.familysize = familysize
         self._createLanguage()
 
     def _createLanguage(self):
@@ -31,11 +32,19 @@ class Mom:
             # create a bitstring with the given alphabet
             word = convertToBase(n, len(self.alphabet), self.alphabet)
             # leading "zeros"
-            while len(word) < self.size:
-                word = self.alphabet[0] + word
+            while len(word) < self.size: word = self.alphabet[0] + word
 
             # update dictionary
-            self.dictionary[word] = s
+            self.dictionary[s] = (word,)
+
+            for _ in range(self.familysize):
+                n = secrets.randbelow(len(word))
+                self.dictionary[s] += (word[:n] + choice(self.alphabet) + word[n+1:],)
+
+    def output(self, file):
+        f = open(file, 'w')
+        [f.write(' '.join(self.dictionary[k]) + ' ' + k + '\n') for k in list(self.dictionary.keys())]
+        f.close()
 
     def __str__(self):
         """ Provide information about this mom. """
