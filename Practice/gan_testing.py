@@ -16,7 +16,7 @@ def get_words():
     with open('english_words.txt') as english_words:
         list_of_words = english_words.readlines()
     # Removes the newline character at the end of each word
-    list_of_words = [word[: -1] for word in list_of_words
+    list_of_words = [word[: -1] for word in list_of_words]
     # Choose 78400 words
     random_words = [random.choice(list_of_words) for _ in range(78400)]
     encoded = [keras.preprocessing.text.one_hot(x, factorial(9),
@@ -74,6 +74,7 @@ def main():
     lst_prediction = list(itertools.chain.from_iterable([list(x) for x in lst_prediction]))
 
     # If you want to score the model, uncomment the line below
+    # score(lst_one_hot_encoding, lst_prediction)
 
 
 if __name__ == '__main__':
