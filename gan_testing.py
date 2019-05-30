@@ -13,7 +13,7 @@ os.environ['KERAS_BACKEND'] = "tensorflow"
 
 def get_words():
     ''' Returns one-hot encoded words and their counterparts '''
-    with open('momwords.txt') as english_words:
+    with open('english_words.txt') as english_words:
         list_of_words = english_words.readlines()
     list_of_words = [word[: -1] for word in list_of_words]
     random_words = [random.choice(list_of_words) for _ in range(78400)]
@@ -26,11 +26,14 @@ def score(original, prediction):
     ''' Scores our prediction by checking for values within 20 % '''
     in_original = 0
     for val in range(len(prediction)):
-        percentages = np.array([abs(prediction[val] / x) for x in original])
-        for p in percentages:
-            if 0.8 <= p <= 1.2:
-                in_original += 1
-                break
+        percentages = np.array([abs(prediction[val] / x) for x in original\
+                                if 0.995 <= abs(prediction[val] / x) <= 1.005])
+        print(percentages)
+        input()
+        # for p in percentages:
+        #     if 0.9995 <= p <= 1.0005:
+        #         in_original += 1
+        #         break
     return in_original
 
 def main():
