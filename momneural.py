@@ -1,7 +1,5 @@
-"""
-Implementation of the "mom" neural networks using Karas.
-Kenny Talarico and Ian Nduhiu, May 2019
-"""
+"""  Implementation of the "mom" neural networks using Karas.
+Kenny Talarico and Ian Nduhiu, May 2019. """
 
 import mom
 import numpy as np

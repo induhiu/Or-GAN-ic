@@ -51,23 +51,27 @@ def talk(mom1, mom2):
 
 
 def main():
+    file = open('momwords.txt', 'w')
     mom1 = mom.Mom(alphabet[:len(alphabet)//2], signs)
     mom2 = mom.Mom(alphabet[len(alphabet)//2:], signs)
 
-    displayDict = {mom1.dictionary[key]: (key, mom2.getValue(mom1.dictionary[key])) for key in mom1.dictionary}
+    # displayDict = {mom1.dictionary[key]: (key, mom2.getValue(mom1.dictionary[key])) for key in mom1.dictionary}
 
-    print(' ' * 15, "MOM 1", ' ' * 20, "MOM 2")
-
-    for k in list(displayDict.keys()):
-        print(k + ':' + (13 - len(k)) * ' ' + displayDict[k][0] +
-              (27 - len(displayDict[k][0])) * ' ' + displayDict[k][1])
-
-    print('\n' + "Generating...")
+    # print(' ' * 15, "MOM 1", ' ' * 20, "MOM 2")
+    #
+    # for k in list(displayDict.keys()):
+    #     print(k + ':' + (13 - len(k)) * ' ' + displayDict[k][0] +
+    #           (27 - len(displayDict[k][0])) * ' ' + displayDict[k][1])
+    #
+    # print('\n' + "Generating...")
     talk(mom1, mom2)
-    print('\n' + '\n' + "---RESULTS---")
-
+    # print('\n' + '\n' + "---RESULTS---")
+    #
+    # for k in list(mom1.dictionary.keys()):
+    #     print(mom1.dictionary[k] + ': ' + (15 - len(mom1.dictionary[k])) * ' ' + k)
     for k in list(mom1.dictionary.keys()):
-        print(mom1.dictionary[k] + ': ' + (15 - len(mom1.dictionary[k])) * ' ' + k)
+        file.write(k + ': ' + mom1.dictionary[k] + '\n')
+    file.close()
 
 
 if __name__ == '__main__':
