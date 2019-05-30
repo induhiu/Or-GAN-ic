@@ -104,7 +104,7 @@ class GAN:
         gan.compile(loss='binary_crossentropy', optimizer=optimizer)
         return gan
 
-    def train(self, epochs=5, batch_size=10):
+    def train(self, epochs=1, batch_size=10):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = self.load_data()
         # Split the training data into batches of size batch_size

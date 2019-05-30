@@ -27,7 +27,7 @@ def get_words():
 def get_score(original, prediction):
     ''' Scores our prediction by checking for values within n %. n is arbitrarily
        set. '''
-    n = 0.00005
+    n = 0.10
     in_original = 0
     for val in range(len(prediction)):
         percentages = np.array([abs(prediction[val] / x) for x in original\
@@ -58,10 +58,13 @@ def main():
     ''' Main function '''
     words, one_hot_encoding = get_words()
     ones = [-1, 1]  # to randomly set negative and non-negative numbers
+
     # Convert the one_hot_encoding to a flattened list
     one_hot_encoding = list(itertools.chain.from_iterable(one_hot_encoding))
+
     # Convert the numbers to ensure they are in range (-1, 1)
     lst_one_hot_encoding = [((x / factorial(9)) * random.choice(ones)) for x in one_hot_encoding]
+
     # Convert to np array and reshape
     np_one_hot_encoding = np.array(lst_one_hot_encoding).reshape(100, 784)
 
@@ -70,6 +73,7 @@ def main():
     my_gan.train()
     prediction = my_gan.predict()  # get the gan to produce words
     lst_prediction = list(prediction)
+
     # To flatten the list into one big ol' list
     lst_prediction = list(itertools.chain.from_iterable([list(x) for x in lst_prediction]))
 
