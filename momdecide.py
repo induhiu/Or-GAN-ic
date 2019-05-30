@@ -5,8 +5,10 @@ import mom
 from random import choice
 from secrets import randbelow
 
-alphabet = ['0', '1', '2', '3', '4', '5']
-signs = ['kenny', 'ian', 'dave', 'decker']
+alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r']
+fi = [w[:-1] for w in open('allwords.txt', 'r').readlines()]
+signs = [choice(fi) for _ in range(20000)]
 
 def talk(mom1, mom2):
     # these will switch each iteration
@@ -63,14 +65,14 @@ def main():
     #     print(k + ':' + (13 - len(k)) * ' ' + displayDict[k][0] +
     #           (27 - len(displayDict[k][0])) * ' ' + displayDict[k][1])
     #
-    # print('\n' + "Generating...")
+    print('\n' + "Generating...")
     talk(mom1, mom2)
     # print('\n' + '\n' + "---RESULTS---")
     #
     # for k in list(mom1.dictionary.keys()):
     #     print(mom1.dictionary[k] + ': ' + (15 - len(mom1.dictionary[k])) * ' ' + k)
     for k in list(mom1.dictionary.keys()):
-        file.write(k + ': ' + mom1.dictionary[k] + '\n')
+        file.write(k + ':' + mom1.dictionary[k] + '\n')
     file.close()
 
 
