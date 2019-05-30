@@ -8,7 +8,7 @@ from secrets import randbelow
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
             'o', 'p', 'q', 'r']
 fi = [w[:-1] for w in open('allwords.txt', 'r').readlines()]
-signs = [choice(fi) for _ in range(20000)]
+signs = [choice(fi) for _ in range(100)]
 
 def talk(mom1, mom2):
     # these will switch each iteration
@@ -56,6 +56,7 @@ def main():
     file = open('momwords.txt', 'w')
     mom1 = mom.Mom(alphabet[:len(alphabet)//2], signs)
     mom2 = mom.Mom(alphabet[len(alphabet)//2:], signs)
+    # print(signs)
 
     # displayDict = {mom1.dictionary[key]: (key, mom2.getValue(mom1.dictionary[key])) for key in mom1.dictionary}
 
@@ -65,8 +66,8 @@ def main():
     #     print(k + ':' + (13 - len(k)) * ' ' + displayDict[k][0] +
     #           (27 - len(displayDict[k][0])) * ' ' + displayDict[k][1])
     #
-    print('\n' + "Generating...")
-    talk(mom1, mom2)
+    # print('\n' + "Generating...")
+    # talk(mom1, mom2)
     # print('\n' + '\n' + "---RESULTS---")
     #
     # for k in list(mom1.dictionary.keys()):
