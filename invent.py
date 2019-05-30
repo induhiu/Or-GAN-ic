@@ -8,7 +8,7 @@ from secrets import randbelow
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
             'o', 'p', 'q', 'r']
 fi = [w[:-1] for w in open('allwords.txt', 'r').readlines()]
-signs = [choice(fi) for _ in range(100)]
+signs = [choice(fi) for _ in range(1001)]
 
 def talk(mom1, mom2):
     # these will switch each iteration
