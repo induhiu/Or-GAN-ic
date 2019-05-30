@@ -41,18 +41,19 @@ class GAN:
         of words from the language generated from the two moms. For now, it
         will use randomly created arrays for testing '''
         n = factorial(9)
-        x_train = np.random.randint(1, n, size=(1000, 784)) if self.data is None \
-                  else self.data
+        x_train = self.data # data passed from outside function
+
+        # The ones below do not really matter as this is unsupervised learning
         y_train = np.random.randint(1, n, size=(10000))
         x_test = np.random.randint(1, n, size=(100, 784))
         y_test = np.random.randint(1, n, size=(100))
+
         return (x_train, y_train, x_test, y_test)
 
     def predict(self, n=factorial(9)):
         ''' Returns a prediction that will be used to score the model '''
         return self.generator.predict(np.random.normal(0, 1, size=[random_dim, random_dim]))
 
-# You will use the Adam optimizer
     def get_optimizer(self):
         return Adam(lr=0.0002, beta_1=0.5)
 
@@ -106,43 +107,25 @@ class GAN:
     def train(self, epochs=5, batch_size=10):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = self.load_data()
-        # Split the training data into batches of size 128
+        # Split the training data into batches of size batch_size
         batch_count = x_train.shape[0] // batch_size
-        #
-        # # Build our GAN netowrk
-        # adam = self.get_optimizer()
-        # generator = self.get_generator(adam)
-        # discriminator = self.get_discriminator(adam)
-        # gan = self.get_gan_network(discriminator, random_dim, generator, adam)
-        n = factorial(9)
+        # n = factorial(9
 
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % e, '-'*15)
             for _ in tqdm(range(batch_count)):
                 # Draws random samples from a normal(Gaussian) distribution
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
-                # print("This is noise\n", noise)
-                # input()
                 language_batch = x_train[np.random.randint(0, x_train.shape[0], size=batch_size)]
-                # print("This is language batch\n", language_batch)
-                # input()
 
-                # Generate fake MNIST images
+                # Generate fake words(noise)
                 generated_words = self.generator.predict(noise)
-                # print("This is generated_words\n", generated_words)
-                # input()
-                # print('The shape of generated words is ', generated_words.shape)
-                # print('The shape of language batch is ', language_batch.shape)
-                # sys.exit()
                 X = np.concatenate([language_batch, generated_words])
-                # print("this is X: \n", X)
-                # input()
-                # sys.exit()
 
                 # Labels for generated and real data
                 y_dis = np.zeros(2*batch_size)
                 # One-sided label smoothing
-                y_dis[:batch_size] = 0.9 #not sure this should be kept
+                y_dis[:batch_size] = 0.9
 
                 # Train discriminator
                 self.discriminator.trainable = True
@@ -150,11 +133,6 @@ class GAN:
 
                 # Train generator
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
-                y_gen = np.ones(batch_size) # not sure if this should be kept
+                y_gen = np.ones(batch_size)
                 self.discriminator.trainable = False
                 self.gan.train_on_batch(noise, y_gen)
-    # print("Done")
-#
-#
-# if __name__ == '__main__':
-#     train(1, 100)
