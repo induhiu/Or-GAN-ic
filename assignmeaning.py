@@ -27,11 +27,11 @@ def main():
 
     xtrain, ytrain = np.array(list(newDict.keys())), np.array(list(newDict.values()))
 
-    # ytrain = np.arange(0, len(ytrain)).reshape(len(keys), 1)
+    ytrain = np.arange(0, len(ytrain)).reshape(len(keys), 1)
 
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['sparse_categorical_accuracy'])
 
-    model.fit(xtrain, ytrain, epochs=100, batch_size=5)
+    model.fit(xtrain, ytrain, epochs=10, batch_size=5)
 
 
 if __name__ == '__main__':
