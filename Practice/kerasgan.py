@@ -121,8 +121,6 @@ def train(epochs=1, batch_size=128):
 
             # Generate fake MNIST images
             generated_images = generator.predict(noise)
-            print(generated_images)
-            input()
             X = np.concatenate([image_batch, generated_images])
 
             # Labels for generated and real data

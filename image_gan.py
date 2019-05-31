@@ -26,8 +26,7 @@ np.random.seed(10)
 random_dim = 100
 
 class GAN:
-
-    def __init__(self, random_dim, x=0, y=0):
+    def __init__(self, random_dim, x=None, y=None):
         self.O = Adam(lr=0.0002, beta_1=0.5)
         self.D = get_discriminator(self.O)
         self.G = get_generator(self.O)
@@ -44,10 +43,9 @@ class GAN:
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if data_loaded:
             x_train, y_train = self.curr_x_train, self.curr_y_train
-            # x_train = reshape_x(x_train)
         else:
             x_train, y_train, x_test, y_test = load_minst_data()
-        # Split the training data into batches of size 128
+        # \Split the training data into batches of size 128
         if x_train.shape[0] >= 128:
             batch_count = x_train.shape[0] // batch_size
         else:
@@ -79,7 +77,6 @@ class GAN:
                 self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
-
             plot_generated_images(e, self.G, self)
 
     def toggleDTrain(self):
@@ -141,9 +138,6 @@ def get_discriminator(optimizer):
 def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
     generated_images = generator.predict(noise)
-    # print(type(generated_images))
-    # print("this is generated images")
-    # print(generated_images)
     generated_images = generated_images.reshape(examples, 28, 28)
     GAN.curr_x_train = generated_images
     plt.figure(figsize=figsize)
@@ -153,14 +147,3 @@ def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10)
         plt.axis('off')
     plt.tight_layout()
     plt.savefig('gan_generated_image_epoch_%d.png' % epoch)
-
-def main():
-    gan = GAN(random_dim)
-    gan.train(5, 128)
-    gan2 = GAN(random_dim, gan.curr_x_train, gan.curr_y_train)
-    gan2.train(2, 128, True)
-    # gan3 = GAN(random_dim, gan2.curr_x_train, gan2.curr_y_train)
-    # gan3.train(1, 128, True)
-
-if __name__ == "__main__":
-    main()
