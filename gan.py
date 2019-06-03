@@ -148,10 +148,10 @@ def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10), f
     plt.tight_layout()
     newfile = filename = 'GANGeneratedImage%d' % id
     copy = 1
-    while newfile + '.png' in os.listdir():
+    while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
         copy += 1
-    plt.savefig(filename)
+    plt.savefig(newfile)
 
 # def main():
 #     gan = GAN(random_dim)

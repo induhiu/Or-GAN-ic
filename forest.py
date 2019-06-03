@@ -9,9 +9,12 @@ random_dim = 100
 def main():
     gancontrol = gan.GAN(random_dim) #control
     gen = gan.Generator()
-    testgans = [gan.GAN(random_dim, generator=gen), gan.GAN(random_dim, generator=gen)]
+    disca = gan.Discriminator()
+    discb = gan.Discriminator()
+    testgans = [gan.GAN(random_dim, generator=gen, discriminator=disca),
+                gan.GAN(random_dim, generator=gen, discriminator=discb)]
 
-    epochs = 5
+    epochs = 15
 
     gancontrol.train(epochs=epochs)
 
