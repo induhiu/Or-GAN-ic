@@ -26,7 +26,7 @@ np.random.seed(10)
 random_dim = 100
 
 class Generator:
-    def __init__(self, optimizer):
+    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5)):
         self.G = Sequential()
         self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
         self.G.add(LeakyReLU(0.2))
@@ -41,7 +41,7 @@ class Generator:
         self.G.compile(loss='binary_crossentropy', optimizer=optimizer)
 
 class Discriminator:
-    def __init__(self, optimizer):
+    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5)):
         self.D = Sequential()
         self.D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
         self.D.add(LeakyReLU(0.2))
@@ -61,11 +61,11 @@ class Discriminator:
         self.D.trainable = False
 
 class GAN:
-    def __init__(self, random_dim, x=None, y=None, d=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
-                 g=Generator(Adam(lr=0.0002, beta_1=0.5))):
+    def __init__(self, random_dim, x=None, y=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
+                 generator=Generator(Adam(lr=0.0002, beta_1=0.5))):
         self.O = Adam(lr=0.0002, beta_1=0.5)
-        self.D = d.D
-        self.G = g.G
+        self.D = discriminator.D
+        self.G = generator.G
 
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
@@ -74,7 +74,7 @@ class GAN:
         self.GAN = Model(inputs=self.input, outputs=self.output)
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O)
 
-    def train(self, epochs=1, batch_size=128, data_loaded=False):
+    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if data_loaded:
@@ -88,7 +88,7 @@ class GAN:
             batch_count = 1
 
         for e in range(1, epochs+1):
-            print('-'*15, 'Epoch %d' % e, '-'*15)
+            print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
                 # Get a random set of input noise and images
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
@@ -113,7 +113,8 @@ class GAN:
                 self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
-            plot_generated_images(e, self.G, self)
+            plot_generated_images(id, self.G, self)
+            id += 1
 
     def toggleDTrain(self):
         self.D.trainable = not self.D.trainable
@@ -134,7 +135,7 @@ def reshape_x(x_train):
     return x_train
 
 # Create a wall of generated MNIST images
-def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
+def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
     generated_images = generator.predict(noise)
     generated_images = generated_images.reshape(examples, 28, 28)
@@ -145,7 +146,12 @@ def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10)
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    plt.savefig('gan_generated_image_epoch_%d.png' % epoch)
+    newfile = filename = 'GANGeneratedImage%d' % id
+    copy = 1
+    while newfile + '.png' in os.listdir():
+        newfile = filename + '(' + str(copy) + ')'
+        copy += 1
+    plt.savefig(filename)
 
 # def main():
 #     gan = GAN(random_dim)
