@@ -74,7 +74,7 @@ class GAN:
         self.GAN = Model(inputs=self.input, outputs=self.output)
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O)
 
-    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1):
+    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1, plot=True):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if data_loaded:
@@ -113,7 +113,8 @@ class GAN:
                 self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
-            plot_generated_images(id, self.G, self)
+            if plot and (id == 1 or id % 5 == 0):
+                plot_generated_images(id, self.G, self)
             id += 1
 
     def toggleDTrain(self):
