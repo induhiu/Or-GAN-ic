@@ -25,11 +25,47 @@ np.random.seed(10)
 # The dimension of our random noise vector.
 random_dim = 100
 
+class Generator:
+    def __init__(self, optimizer):
+        self.G = Sequential()
+        self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
+        self.G.add(LeakyReLU(0.2))
+
+        self.G.add(Dense(512))
+        self.G.add(LeakyReLU(0.2))
+
+        self.G.add(Dense(1024))
+        self.G.add(LeakyReLU(0.2))
+
+        self.G.add(Dense(784, activation='tanh'))
+        self.G.compile(loss='binary_crossentropy', optimizer=optimizer)
+
+class Discriminator:
+    def __init__(self, optimizer):
+        self.D = Sequential()
+        self.D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
+        self.D.add(LeakyReLU(0.2))
+        self.D.add(Dropout(0.3))
+
+        self.D.add(Dense(512))
+        self.D.add(LeakyReLU(0.2))
+        self.D.add(Dropout(0.3))
+
+        self.D.add(Dense(256))
+        self.D.add(LeakyReLU(0.2))
+        self.D.add(Dropout(0.3))
+
+        self.D.add(Dense(1, activation='sigmoid'))
+        self.D.compile(loss='binary_crossentropy', optimizer=optimizer)
+
+        self.D.trainable = False
+
 class GAN:
-    def __init__(self, random_dim, x=None, y=None):
+    def __init__(self, random_dim, x=None, y=None, d=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
+                 g=Generator(Adam(lr=0.0002, beta_1=0.5))):
         self.O = Adam(lr=0.0002, beta_1=0.5)
-        self.D = get_discriminator(self.O)
-        self.G = get_generator(self.O)
+        self.D = d.D
+        self.G = g.G
 
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
@@ -97,43 +133,6 @@ def reshape_x(x_train):
     x_train = x_train.reshape(60000, 784)
     return x_train
 
-
-def get_generator(optimizer):
-    G = Sequential()
-    G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
-    G.add(LeakyReLU(0.2))
-
-    G.add(Dense(512))
-    G.add(LeakyReLU(0.2))
-
-    G.add(Dense(1024))
-    G.add(LeakyReLU(0.2))
-
-    G.add(Dense(784, activation='tanh'))
-    G.compile(loss='binary_crossentropy', optimizer=optimizer)
-    return G
-
-def get_discriminator(optimizer):
-    D = Sequential()
-    D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
-    D.add(LeakyReLU(0.2))
-    D.add(Dropout(0.3))
-
-    D.add(Dense(512))
-    D.add(LeakyReLU(0.2))
-    D.add(Dropout(0.3))
-
-    D.add(Dense(256))
-    D.add(LeakyReLU(0.2))
-    D.add(Dropout(0.3))
-
-    D.add(Dense(1, activation='sigmoid'))
-    D.compile(loss='binary_crossentropy', optimizer=optimizer)
-
-    D.trainable = False
-
-    return D
-
 # Create a wall of generated MNIST images
 def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
@@ -147,3 +146,10 @@ def plot_generated_images(epoch, generator, GAN=None, examples=100, dim=(10, 10)
         plt.axis('off')
     plt.tight_layout()
     plt.savefig('gan_generated_image_epoch_%d.png' % epoch)
+
+# def main():
+#     gan = GAN(random_dim)
+#     gan.train()
+#
+# if __name__ == '__main__':
+#     main()
