@@ -72,9 +72,11 @@ class GAN:
         self.curr_x_train, self.curr_y_train = x, y
 
         self.GAN = Model(inputs=self.input, outputs=self.output)
-        self.GAN.compile(loss='binary_crossentropy', optimizer=self.O)
+        self.GAN.compile(loss='binary_crossentropy', optimizer=self.O,
+                         metrics=['accuracy'])
 
-    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1, plot=True):
+    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1, plot=True,
+            attack=False):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if data_loaded:
@@ -87,6 +89,7 @@ class GAN:
         else:
             batch_count = 1
 
+        generated_images = None
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
@@ -113,7 +116,14 @@ class GAN:
                 self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
-            if plot and (id == 1 or id % 5 == 0):
+
+            # If you want to evaluate the model's perfomance. To be used
+            # in times of attack. Threshold loss is 20. If average loss is above
+            # threshold, it's most likely a virus. Returns a list indicating
+            # loss and accuracy
+            eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
+                    else None
+            if plot:
                 plot_generated_images(id, self.G, self)
             id += 1
 
@@ -125,6 +135,8 @@ def load_minst_data():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     # normalize our inputs to be in the range[-1, 1]
     x_train = reshape_x(x_train)
+    x_test = x_test.reshape(10000, 784)
+    x_test = np.array([x_test[i][:100] for i in range(len(x_test))])
     return (x_train, y_train, x_test, y_test)
 
 def reshape_x(x_train):
@@ -154,9 +166,5 @@ def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10), f
         copy += 1
     plt.savefig(newfile)
 
-# def main():
-#     gan = GAN(random_dim)
-#     gan.train()
-#
 # if __name__ == '__main__':
-#     main()
+    # GAN(random_dim).train()
