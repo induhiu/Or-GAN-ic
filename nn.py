@@ -1,5 +1,5 @@
 ''' Neural network implementation. Will be used to give meaning to images.
-    Documentation by Ian Nduhiu'''
+    Documentation(some) by Ian Nduhiu'''
 # Adapted from https://nextjournal.com/gkoehler/digit-recognition-with-keras
 
 # imports for array-handling and plotting
