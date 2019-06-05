@@ -1,11 +1,22 @@
 ''' A graph implementation of a forest by Ian Nduhiu, Kenny Talarico and
-    Dave Perkins. Created on May 31, 2019 '''
+    Dave Perkins. Created on May 31, 2019. '''
 
 import gan
 import tree
 from random import choice
 
 random_dim = 100
+
+class Forest:
+    def __init__(self):
+        self.dekutree = tree.Tree()
+        self.dekutree.brain.train()
+        self.trees = [[None, None, None, None, None],
+                      [None, None, None, None, None],
+                      [None, None, self.dekutree, None, None],
+                      [None, None, None, None, None],
+                      [None, None, None, None, None]]
+
 
 def main():
     # gancontrol = gan.GAN(random_dim) #control
