@@ -64,18 +64,18 @@ class Neural():
 
         return (X_train, Y_train, X_test, Y_test)
 
-    def train_model(self, e=5):
+    def train_model(self, e=1):
         ''' Trains the model '''
         self.model.fit(self.x_train, self.y_train, epochs=e, batch_size=128)
 
     def give_meaning(self):
         ''' Predicts meaning of symbols '''
-        return self.Model.predict(self.x_test)
+        return self.model.predict(self.x_test)
 
-# if __name__ == '__main__':
-#     nn = Neural()
-#     nn.train_model()
-#     pred = nn.give_meaning()
-#     # graph(nn.x_test)
-#     for i in range(10):
-#         print(pred[i], nn.y_test[i])
+if __name__ == '__main__':
+    nn = Neural()
+    nn.train_model()
+    pred = nn.give_meaning()
+    # graph(nn.x_test)
+    for i in range(10):
+        print(pred[i], nn.y_test[i])
