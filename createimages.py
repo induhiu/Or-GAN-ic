@@ -1,22 +1,15 @@
-""" Script to convert a large dataset of images into a text file consisting
+""" Script to convert a large dataset of images into an npz file consisting
     of representations of NumPy arrays.
     Implementation by Kenny Talarico, June 2019. """
 
-from numpy import array
+import numpy as np
 from PIL import Image
-
-def writetofile(ary, out):
-    out.write('\n'.join(' '.join(str(255-c) for c in r) for r in ary))
-    out.write('\n')
+import os
 
 def main():
-    ary = array(Image.open('testin.png'))
-    out = open('testout.txt', 'w')
-
-    for _ in range(70000):
-        writetofile(ary, out)
-
-    #Image.fromarray(ary).save('testout.png')
+    dir = os.getcwd() + '/logograms'
+    imgs = os.listdir(dir)
+    np.savez_compressed('imgarys.npz', **{imgs[i][:5]: np.array(Image.open(dir + '/' + imgs[i])) for i in range(70000)})
 
 if __name__ == '__main__':
     main()
