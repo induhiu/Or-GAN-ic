@@ -16,7 +16,6 @@ class WordIdentifier:
     def __init__(self, lin):
         self.dict = {line[line.rfind(' ')+1:]: line[:line.rfind(' ')].split() for line in lin}
 
-
     def __str__(self):
         return self.dict
 
