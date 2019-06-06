@@ -45,15 +45,15 @@ class Discriminator:
         self.D = Sequential()
         self.D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
         self.D.add(LeakyReLU(0.2))
-        # self.D.add(Dropout(0.3))
+        self.D.add(Dropout(0.3))
 
         self.D.add(Dense(512))
-        # self.D.add(LeakyReLU(0.2))
-        # self.D.add(Dropout(0.3))
+        self.D.add(LeakyReLU(0.2))
+        self.D.add(Dropout(0.3))
 
         self.D.add(Dense(256))
-        # self.D.add(LeakyReLU(0.2))
-        # self.D.add(Dropout(0.3))
+        self.D.add(LeakyReLU(0.2))
+        self.D.add(Dropout(0.3))
 
         self.D.add(Dense(1, activation='sigmoid'))
         self.D.compile(loss='binary_crossentropy', optimizer=optimizer)
@@ -76,7 +76,7 @@ class GAN:
                          metrics=['accuracy'])
 
     def train(self, epochs=1, batch_size=128, id=1, plot=True,
-            attack=False, lst=[]):
+            attack=False, all_generated_images=[]):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if self.curr_x_train is not None:
@@ -127,9 +127,9 @@ class GAN:
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
             if plot:
-                lst.append(plot_generated_images(id, self.G, self))
+                all_generated_images.append(plot_generated_images(id, self.G, self))
             id += 1
-        return lst
+        return all_generated_images
 
     def toggleDTrain(self):
         self.D.trainable = not self.D.trainable

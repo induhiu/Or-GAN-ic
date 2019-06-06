@@ -22,9 +22,12 @@ class Neural():
             self.x_train, self.y_train, self.x_test, self.y_test = self.load_data()
         else:
             self.x_train = x_train
-            self.y_train = y_train
             self.x_test = x_test
-            self.y_test = y_test
+            # Encoding labels. Example 4 becomes [0,0,0,0,1,0,0,0,0,0]
+            num_classes = 10
+            self.y_train = np_utils.to_categorical(y_train, n_classes)
+            self.y_test = np_utils.to_categorical(y_test, n_classes)
+
 
         # building a linear stack of layers with the sequential model
         self.model = Sequential()
@@ -66,10 +69,11 @@ class Neural():
 
     def train_model(self, e=1):
         ''' Trains the model '''
+        # Default epoch is set to 1
         self.model.fit(self.x_train, self.y_train, epochs=e, batch_size=128)
 
     def give_meaning(self):
-        ''' Predicts meaning of symbols '''
+        ''' Predicts meaning of symbols. Returns an array of predictions '''
         return self.model.predict(self.x_test)
 #
 # if __name__ == '__main__':
