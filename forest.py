@@ -17,6 +17,13 @@ class Forest:
                       [None, None, None, None, None],
                       [None, None, None, None, None]]
 
+def write_to_file(np_array):
+    ''' Writes a numpy array to a file '''
+    np_array.tofile('language_L.txt')
+
+def retrieve_from_file():
+    ''' Retrieves numpy array from a file '''
+    return np.fromfile('filename.txt', dtype=int)
 
 def main():
     # gancontrol = gan.GAN(random_dim) #control
@@ -54,11 +61,16 @@ def main():
     disc2 = gan.Discriminator()
 
     gan1 = gan.GAN(random_dim, generator=gen, discriminator=disc1)
-    gan1.train(epochs=10)
+    gen_images_1 = gan1.train(epochs=10)
 
     gan2 = gan.GAN(random_dim, generator=gen, discriminator=disc2)
-    gan2.train(epochs=5)
+    gen_images_2 = gan2.train(epochs=5)
 
+    # # If you wish to write any of the generated images to a file
+    # write_to_file(gen_images_1)
+
+    # # If you want to retrieve generated images
+    # my_array = retrieve_from_file()
 
 
 if __name__ == '__main__':

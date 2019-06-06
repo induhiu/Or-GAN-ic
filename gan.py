@@ -76,7 +76,7 @@ class GAN:
                          metrics=['accuracy'])
 
     def train(self, epochs=1, batch_size=128, data_loaded=False, id=1, plot=True,
-            attack=False):
+            attack=False, lst=[]):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if data_loaded:
@@ -100,6 +100,8 @@ class GAN:
 
                 # Generate fake MNIST images
                 generated_images = self.G.predict(noise)
+                # print(generated_images.shape)
+                # sys.exit()
                 X = np.concatenate([image_batch, generated_images])
 
                 # Labels for generated and real data
@@ -124,8 +126,9 @@ class GAN:
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
             if plot:
-                plot_generated_images(id, self.G, self)
+                lst.append(plot_generated_images(id, self.G, self))
             id += 1
+        return lst
 
     def toggleDTrain(self):
         self.D.trainable = not self.D.trainable
@@ -148,7 +151,8 @@ def reshape_x(x_train):
     return x_train
 
 # Create a wall of generated MNIST images
-def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10), figsize=(10, 10)):
+def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10),
+                        figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
     generated_images = generator.predict(noise)
     generated_images = generated_images.reshape(examples, 28, 28)
@@ -165,6 +169,11 @@ def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10), f
         newfile = filename + '(' + str(copy) + ')'
         copy += 1
     plt.savefig(newfile)
+    return generated_images
 
 # if __name__ == '__main__':
-    # GAN(random_dim).train()
+#     my_lst = GAN(random_dim).train(epochs=5, lst=[])
+#     my_lst = np.array(my_lst)
+#     print(my_lst)
+#     print(my_lst.shape)
+#     my_lst = my_lst.reshape(500, 28, 28)
