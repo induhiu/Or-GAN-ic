@@ -4,6 +4,7 @@
 import gan
 import tree
 from random import choice
+import numpy as np
 
 random_dim = 100
 
@@ -23,7 +24,7 @@ def write_to_file(np_array):
 
 def retrieve_from_file():
     ''' Retrieves numpy array from a file '''
-    return np.fromfile('filename.txt', dtype=int)
+    return np.fromfile('filename.txt')
 
 def main():
     # gancontrol = gan.GAN(random_dim) #control
@@ -56,18 +57,23 @@ def main():
     #
     # gan2.train()
 
-    gen = gan.Generator()
+    gen1 = gan.Generator()
+    gen2 = gan.Generator()
     disc1 = gan.Discriminator()
     disc2 = gan.Discriminator()
 
-    gan1 = gan.GAN(random_dim, generator=gen, discriminator=disc1)
-    gen_images_1 = gan1.train(epochs=10)
+    gan1 = gan.GAN(random_dim, generator=gen1, discriminator=disc1)
+    gen_images_1 = np.array(gan1.train(epochs=10))
+    gen_images_1 = gen_images_1.reshape(gen_images_1.shape[0] * \
+                gen_images_1.shape[1], gen_images_1.shape[2], gen_images_1.shape[3])
 
-    gan2 = gan.GAN(random_dim, generator=gen, discriminator=disc2)
-    gen_images_2 = gan2.train(epochs=5)
+    print(gen_images_1.shape)
 
-    # # If you wish to write any of the generated images to a file
-    # write_to_file(gen_images_1)
+    # gan2 = gan.GAN(random_dim, generator=gen2, discriminator=disc1)
+    # gen_images_2 = gan2.train()
+
+    # If you wish to write any of the generated images to a file
+    write_to_file(gen_images_1)
 
     # # If you want to retrieve generated images
     # my_array = retrieve_from_file()

@@ -71,11 +71,11 @@ class Neural():
     def give_meaning(self):
         ''' Predicts meaning of symbols '''
         return self.model.predict(self.x_test)
-
-if __name__ == '__main__':
-    nn = Neural()
-    nn.train_model()
-    pred = nn.give_meaning()
-    # graph(nn.x_test)
-    for i in range(10):
-        print(pred[i], nn.y_test[i])
+#
+# if __name__ == '__main__':
+#     nn = Neural()
+#     nn.train_model()
+#     pred = nn.give_meaning()
+#     # graph(nn.x_test)
+#     for i in range(10):
+#         print(pred[i], nn.y_test[i])

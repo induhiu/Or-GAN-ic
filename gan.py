@@ -61,7 +61,7 @@ class Discriminator:
         self.D.trainable = False
 
 class GAN:
-    def __init__(self, random_dim, x=None, y=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
+    def __init__(self, random_dim, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
                  generator=Generator(Adam(lr=0.0002, beta_1=0.5))):
         self.O = Adam(lr=0.0002, beta_1=0.5)
         self.D = discriminator.D
@@ -69,18 +69,19 @@ class GAN:
 
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
-        self.curr_x_train, self.curr_y_train = x, y
+        self.curr_x_train, self.curr_x_test = x_train, x_test
 
         self.GAN = Model(inputs=self.input, outputs=self.output)
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O,
                          metrics=['accuracy'])
 
-    def train(self, epochs=1, batch_size=128, data_loaded=False, id=1, plot=True,
+    def train(self, epochs=1, batch_size=128, id=1, plot=True,
             attack=False, lst=[]):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
-        if data_loaded:
-            x_train, y_train = self.curr_x_train, self.curr_y_train
+        if self.curr_x_train is not None:
+            x_train, x_test = self.curr_x_train, self.curr_x_test
+            x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] ** 2)
         else:
             x_train, y_train, x_test, y_test = load_minst_data()
         # \Split the training data into batches of size 128
