@@ -45,15 +45,15 @@ class Discriminator:
         self.D = Sequential()
         self.D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
         self.D.add(LeakyReLU(0.2))
-        self.D.add(Dropout(0.3))
+        # self.D.add(Dropout(0.3))
 
         self.D.add(Dense(512))
-        self.D.add(LeakyReLU(0.2))
-        self.D.add(Dropout(0.3))
+        # self.D.add(LeakyReLU(0.2))
+        # self.D.add(Dropout(0.3))
 
         self.D.add(Dense(256))
-        self.D.add(LeakyReLU(0.2))
-        self.D.add(Dropout(0.3))
+        # self.D.add(LeakyReLU(0.2))
+        # self.D.add(Dropout(0.3))
 
         self.D.add(Dense(1, activation='sigmoid'))
         self.D.compile(loss='binary_crossentropy', optimizer=optimizer)

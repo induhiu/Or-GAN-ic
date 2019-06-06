@@ -63,17 +63,17 @@ def main():
     disc2 = gan.Discriminator()
 
     gan1 = gan.GAN(random_dim, generator=gen1, discriminator=disc1)
-    gen_images_1 = np.array(gan1.train(epochs=10))
-    gen_images_1 = gen_images_1.reshape(gen_images_1.shape[0] * \
-                gen_images_1.shape[1], gen_images_1.shape[2], gen_images_1.shape[3])
+    gen_images_1 = np.array(gan1.train(epochs=5))
+    # gen_images_1 = gen_images_1.reshape(gen_images_1.shape[0] * \
+                # gen_images_1.shape[1], gen_images_1.shape[2], gen_images_1.shape[3])
 
-    print(gen_images_1.shape)
+    # print(gen_images_1.shape)
 
     # gan2 = gan.GAN(random_dim, generator=gen2, discriminator=disc1)
     # gen_images_2 = gan2.train()
 
     # If you wish to write any of the generated images to a file
-    write_to_file(gen_images_1)
+    # write_to_file(gen_images_1)
 
     # # If you want to retrieve generated images
     # my_array = retrieve_from_file()
