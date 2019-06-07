@@ -18,8 +18,6 @@ def main():
     xtrain = np.array(xtrain)
     xtest = np.array(xtest)
     # print(xtrain)
-    print(xtrain.shape)
-    print(xtest.shape)
 
     ganny = gan.GAN(100, x_train=xtrain, x_test=xtest)
     ganny.train(10)

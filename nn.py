@@ -15,14 +15,22 @@ from keras.models import Sequential, load_model
 from keras.layers.core import Dense, Dropout, Activation
 from keras.utils import np_utils
 
+# for exits while debugging, use sys.exit()
+import sys
+
 class Neural():
     def __init__(self, x_train=None, y_train=None, x_test=None, y_test=None):
         ''' The Constructor '''
         if x_train is None:  # if data is not loaded externally
             self.x_train, self.y_train, self.x_test, self.y_test = self.load_data()
         else:
-            self.x_train = x_train
-            self.x_test = x_test
+            self.x_train = x_train.astype('float32')
+            self.x_test = x_test.astype('float32')
+            self.x_train = self.x_train.reshape(self.x_train[0], self.x_train[1] ** 2)
+            self.x_test = self.x_test.reshape(self.x_test[0], self.x_test[1] ** 2)
+            self.x_train /= 255
+            self.y_train /= 255
+
             # Encoding labels. Example 4 becomes [0,0,0,0,1,0,0,0,0,0]
             num_classes = 10
             self.y_train = np_utils.to_categorical(y_train, n_classes)
@@ -75,11 +83,11 @@ class Neural():
     def give_meaning(self):
         ''' Predicts meaning of symbols. Returns an array of predictions '''
         return self.model.predict(self.x_test)
-#
-# if __name__ == '__main__':
-#     nn = Neural()
-#     nn.train_model()
-#     pred = nn.give_meaning()
-#     # graph(nn.x_test)
-#     for i in range(10):
-#         print(pred[i], nn.y_test[i])
+
+if __name__ == '__main__':
+    nn = Neural()
+    nn.train_model()
+    pred = nn.give_meaning()
+    # graph(nn.x_test)
+    for i in range(10):
+        print(pred[i], nn.y_test[i])
