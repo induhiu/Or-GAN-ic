@@ -69,8 +69,8 @@ def main():
 
     # print(gen_images_1.shape)
 
-    # gan2 = gan.GAN(random_dim, generator=gen2, discriminator=disc1)
-    # gen_images_2 = gan2.train()
+    gan2 = gan.GAN(random_dim, generator=gen2, discriminator=disc1)
+    gen_images_2 = gan2.train(epochs=5)
 
     # If you wish to write any of the generated images to a file
     # write_to_file(gen_images_1)
