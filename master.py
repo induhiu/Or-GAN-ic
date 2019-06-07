@@ -17,6 +17,7 @@ def main():
     xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)
     xtrain = np.array(xtrain)
     xtest = np.array(xtest)
+    # print(xtrain)
     print(xtrain.shape)
     print(xtest.shape)
 

@@ -81,6 +81,7 @@ class GAN:
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if self.curr_x_train is not None:
             x_train, x_test = self.curr_x_train, self.curr_x_test
+            x_train = (x_train.astype(np.float32) - 127.5)/127.5
             x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] ** 2)
         else:
             x_train, y_train, x_test, y_test = load_minst_data()
@@ -137,7 +138,7 @@ class GAN:
 def load_minst_data():
     # load the data
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    # normalize our inputs to be in the range[-1, 1]
+    # reshape the xtrain
     x_train = reshape_x(x_train)
     x_test = x_test.reshape(10000, 784)
     x_test = np.array([x_test[i][:100] for i in range(len(x_test))])
