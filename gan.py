@@ -172,5 +172,10 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.savefig(newfile)
     return generated_images
 
+<<<<<<< HEAD
 # if __name__ == '__main__':
     # GAN().train()
+=======
+if __name__ == '__main__':
+    GAN().train()
+>>>>>>> 5077fbcd06a472da95430372315e3498846b8f0a
