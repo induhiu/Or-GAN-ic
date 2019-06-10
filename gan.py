@@ -127,8 +127,8 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and id == 10:
-                all_generated_images.append(plot_generated_images(id, self.G, self))
+            if plot and id % 3 == 0:
+                all_generated_images.append(plot_generated_images(id, self.G))
             id += 1
         return all_generated_images
 
@@ -153,12 +153,11 @@ def reshape_x(x_train):
     return x_train
 
 # Create a wall of generated MNIST images
-def plot_generated_images(id, generator, GAN=None, examples=100, dim=(10, 10),
+def plot_generated_images(id, generator, examples=100, dim=(10, 10),
                         figsize=(10, 10)):
     noise = np.random.normal(0, 1, size=[examples, random_dim])
     generated_images = generator.predict(noise)
     generated_images = generated_images.reshape(examples, 28, 28)
-    GAN.curr_x_train = generated_images
     plt.figure(figsize=figsize)
     for i in range(generated_images.shape[0]):
         plt.subplot(dim[0], dim[1], i+1)
