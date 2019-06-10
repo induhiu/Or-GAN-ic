@@ -18,13 +18,6 @@ class Forest:
                       [None, None, None, None, None],
                       [None, None, None, None, None]]
 
-def write_to_file(np_array):
-    ''' Writes a numpy array to a file '''
-    np_array.tofile('language_L.txt')
-
-def retrieve_from_file():
-    ''' Retrieves numpy array from a file '''
-    return np.fromfile('filename.txt')
 
 def main():
     # gancontrol = gan.GAN(random_dim) #control

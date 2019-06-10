@@ -61,7 +61,7 @@ class Discriminator:
         self.D.trainable = False
 
 class GAN:
-    def __init__(self, random_dim, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
+    def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
                  generator=Generator(Adam(lr=0.0002, beta_1=0.5))):
         self.O = Adam(lr=0.0002, beta_1=0.5)
         self.D = discriminator.D
@@ -127,7 +127,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            if plot and id == 10:
                 all_generated_images.append(plot_generated_images(id, self.G, self))
             id += 1
         return all_generated_images
