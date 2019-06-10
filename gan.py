@@ -127,13 +127,8 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-<<<<<<< HEAD
-            if plot:
-                all_generated_images.append(plot_generated_images(id, self.G, self))
-=======
             if plot and id % 3 == 0:
                 all_generated_images.append(plot_generated_images(id, self.G))
->>>>>>> ecc32b5ba50bde78a883f94d52aa7c29fcfbc8db
             id += 1
         return all_generated_images
 
