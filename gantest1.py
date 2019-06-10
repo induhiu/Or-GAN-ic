@@ -21,3 +21,6 @@ def main():
 
     gan1.train(10)
     gan2.train(10)
+
+if __name__ == '__main__':
+    main()
