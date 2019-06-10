@@ -1,4 +1,5 @@
 import gan
+import numpy as np
 
 def slicedata(dic, size):
     vals = list(dic.values())
