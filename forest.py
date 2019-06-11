@@ -59,7 +59,7 @@ class Forest:
                 return True
         return False
 
-    def age(self, rate=1):
+    def grow(self, rate=1):
         """ The forest ages. All trees get their age incremented, and new
             trees appear at the rate given as a parameter. """
         for t in self.trees:
@@ -81,11 +81,12 @@ class Forest:
             for d in directions:
                 if self.forest[t.id[0] + d[0]][t.id[1] + d[1]] and self.forest[t.id[0] + d[0]][t.id[1] + d[1]].age > t.age:
                     gan.GAN(generator=t.generator, discriminator=self.forest[t.id[0] + d[0]][t.id[1] + d[1]].discriminator).train()
+                    # this gan needs to be fed the language of its discriminator's tree's generator
 
 def main():
     forest = Forest(5)
     for _ in range(20):
-        forest.age(rate=1)
+        forest.grow()
     print(forest)
 
 if __name__ == '__main__':
