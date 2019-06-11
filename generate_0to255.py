@@ -1,14 +1,23 @@
 from PIL import Image
 import numpy as np
 import gan
+import sys
 
-def produce_language(generator, n=1):
-    ''' Produces the language i.e. a 2d array of values ranging from 0 to 255
-    '''
+def produce_language(gen, n=600):
+    ''' Produces the language i.e. a 2d array of values ranging from 0 to 255.
+    Takes a generator and optional n as parameters and returns a numpy array
+    of n * 100 images  '''
+    noise = np.random.normal(0, 1, size=(100, 100))
     all_generated_images = []
-    for _ in range(n):
-        noise = np.random.normal(0, 1, size=(100, 100))
-        generated = generator.G.predict(noise)
+    for i in range(n):
+        # # for debugging if you want to
+        if i % 100 == 0:
+            generated = gan.plot_generated_images(id=i, generator=gen.G)
+        else:
+            generated = gen.G.predict(noise)
+        # # Comment out the line below if you intend to use the debugging code
+        # # above
+        # generated = gen.G.predict(noise)
         generated = generated.reshape(100, 28, 28)
         generated = (generated * 127.5) + 127.5
         generated = np.array(generated, dtype='int64')
@@ -21,7 +30,13 @@ def produce_language(generator, n=1):
 if __name__ == '__main__':
     gen1 = gan.Generator()
     my_gan = gan.GAN(generator=gen1)
-    my_gan.train(epochs=10, plot=False)
+    my_gan.train(epochs=5, plot=False)
     curr_xtrain = produce_language(gen1, 600)
-    new_gan = gan.GAN(x_train=curr_xtrain)
-    new_gan.train(epochs=5)
+    img = Image.fromarray(curr_xtrain[0].astype('uint8'))
+    img.save('test.png')
+
+    # sys.exit()
+    gen2 = gan.Generator()
+    disc = gan.Discriminator()
+    new_gan = gan.GAN(generator= gen2, discriminator=disc, x_train=curr_xtrain)
+    new_gan.train(epochs=10)
