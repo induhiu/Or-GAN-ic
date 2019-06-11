@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
+from PIL import Image
 
 import tensorflow
 
@@ -86,10 +87,14 @@ class GAN:
         else:
             x_train, y_train, x_test, y_test = load_minst_data()
         # \Split the training data into batches of size 128
+        # print(x_train)
         if x_train.shape[0] >= 128:
             batch_count = x_train.shape[0] // batch_size
         else:
             batch_count = 1
+
+        # print(x_train[0])
+        # sys.exit()
 
         generated_images = None
         for e in range(1, epochs+1):
@@ -104,10 +109,19 @@ class GAN:
                 generated_images = self.G.predict(noise)
                 # print(generated_images.shape)
                 # sys.exit()
-                X = np.concatenate([image_batch, generated_images])
+                # print(noise.shape)
+                # print(image_batch.shape)
+                # print(generated_images.shape)
+                new_noise = np.random.normal(0, 1, size=[batch_size, 784])
+                # print(new_noise.shape)
+                X = np.concatenate([image_batch, new_noise, generated_images])
+                # print(X.shape)
+                # sys.exit()
 
                 # Labels for generated and real data
-                y_dis = np.zeros(2*batch_size)
+                # y_dis = np.zeros(2*batch_size)
+
+                y_dis = np.zeros(3*batch_size)
                 # One-sided label smoothing
                 y_dis[:batch_size] = 0.9
 
@@ -138,6 +152,10 @@ class GAN:
 def load_minst_data():
     # load the data
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    print(type(x_train[0]))
+    # img = Image.fromarray(x_train[0])
+    # img.save('test.png')
+    # sys.exit()
     # reshape the xtrain
     x_train = reshape_x(x_train)
     x_test = x_test.reshape(10000, 784)
@@ -172,10 +190,5 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.savefig(newfile)
     return generated_images
 
-<<<<<<< HEAD
 # if __name__ == '__main__':
     # GAN().train()
-=======
-if __name__ == '__main__':
-    GAN().train()
->>>>>>> 5077fbcd06a472da95430372315e3498846b8f0a
