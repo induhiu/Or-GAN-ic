@@ -7,9 +7,10 @@
 """
 
 import networkx as nx
-import random
 import matplotlib.pyplot as plt
-import numpy as np
+# import numpy as np
+import sys
+import pickle
 
 
 def generate_graph():
@@ -23,6 +24,15 @@ def generate_graph():
 
 def main():
     """ The main function. """
+
+    # This stuff appears in a different file now:
+
+    # with open('testdata.txt', 'rb') as fn:
+    #     d = pickle.loads(fn.read())
+    #
+    # print(d)
+    # print(type(d))
+    # sys.exit()
 
     G, positions, edges = generate_graph()
     fig, ax = plt.subplots(figsize=(10,7))
