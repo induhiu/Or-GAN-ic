@@ -88,10 +88,10 @@ class ForestGrid:
 
 class Forest:
     def __init__(self):
-        self.deku = tree.Tree(location=(0, 0))
+        self.deku = tree.Tree(location=(0, 0), forest=self)
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
         print("Learning...")
-        gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=25)
+        # gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=25)
         print("Deku Tree has learned the common language. Resetting Deku's discriminator...")
         self.deku.resetDiscriminator()
         print("Finishing...")
@@ -103,16 +103,20 @@ class Forest:
         for _ in range(years):
             r = rate
             self.age()
+            for t in list(self.locations.values()):
+                t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
 
     def spawn(self):
-        child = choice(list(self.locations.values())).spawnChild()
+        parent = choice(list(self.locations.values()))
+        while parent.age == 0:
+            parent = choice(list(self.locations.values()))
+        child = parent.spawnChild()
         self.locations[child.location] = child
         self.connections[child.location] = [child.parent.location]
         self.connections[child.parent.location].append(child.location)
-
 
     def age(self):
         for t in list(self.locations.values()):
@@ -125,8 +129,10 @@ class Forest:
 
 def main():
     forest = Forest()
-    # forest.grow(rate=1, years=5)
-    # print(forest.connections.keys())
+    forest.grow(rate=.5, years=10)
+    for t in forest.locations:
+        print(forest.locations[t])
+    print(forest.connections[(0, 0)])
 
 
 if __name__ == '__main__':
