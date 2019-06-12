@@ -20,4 +20,4 @@ class Tree:
 
     def spawnChild(self):
         num = randbelow(628) / 100
-        return Tree(location=(round(math.cos(num) * self.age * 10, 2), round(math.sin(num) * self.age * 10, 2)), neighbors=[self], parent=self)
+        return Tree(location=(round(math.cos(num) * self.age * 10, 2), round(math.sin(num) * self.age * 10, 2)), parent=self)

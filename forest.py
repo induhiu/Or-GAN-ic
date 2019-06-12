@@ -9,6 +9,7 @@ import tree
 from random import choice
 import numpy as np
 from secrets import randbelow
+from language_getter import produce_language
 
 random_dim = 100
 directions = ((1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 1), (-1, 0), (-1, -1))
@@ -89,24 +90,35 @@ class Forest:
         self.locations = {(0, 0): self.deku}
         self.connections = {(0, 0): []}
 
-    def grow(self):
+    def grow(self, rate=1, years=1):
+        for _ in range(years):
+            r = rate
+            self.age()
+            while randbelow(100) < r * 100:
+                self.spawn()
+                r -= 1
+
+    def spawn(self):
         child = choice(list(self.locations.values())).spawnChild()
         self.locations[child.location] = child
         self.connections[child.location] = [child.parent.location]
         self.connections[child.parent.location].append(child.location)
 
+
     def age(self):
         for t in list(self.locations.values()):
             t.age += 1
 
+    def allParentCommunicate(self):
+        for t in list(self.locations.values()):
+            if t.parent: #handle deku
+                gan.GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
+
+
 def main():
     forest = Forest()
-    forest.age()
-    forest.grow()
-    forest.age()
-    forest.age()
-    forest.grow()
-    print(forest.connections)
+    forest.grow(rate=1, years=5)
+    print(forest.connections.keys())
 
 
 if __name__ == '__main__':
