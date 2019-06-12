@@ -15,26 +15,38 @@ from keras.models import Sequential, load_model
 from keras.layers.core import Dense, Dropout, Activation
 from keras.utils import np_utils
 
+# for reading data from text file
+import pickle
+
 # for exits while debugging, use sys.exit()
 import sys
 
-class Neural():
-    def __init__(self, x_train=None, y_train=None, x_test=None, y_test=None):
-        ''' The Constructor '''
-        if x_train is None:  # if data is not loaded externally
-            self.x_train, self.y_train, self.x_test, self.y_test = self.load_data()
-        else:
-            self.x_train = x_train.astype('float32')
-            self.x_test = x_test.astype('float32')
-            self.x_train = self.x_train.reshape(self.x_train[0], self.x_train[1] ** 2)
-            self.x_test = self.x_test.reshape(self.x_test[0], self.x_test[1] ** 2)
-            self.x_train /= 255
-            self.y_train /= 255
+def load_external_data():
+    ''' Returns externally loaded datasets for training neural network '''
+    alphabets = 'ABCEDFGHIJ'
+    all_vals = pickle.load(open('lang_for_nn.txt', 'rb'))
+    xtrain, xtest = np.array([x[0] for x in all_vals][:60000]),\
+                        np.array([x[0] for x in all_vals][60000:])
+    ytrain, ytest = np.array([alphabets.index(x[1]) for x in all_vals][:60000]),\
+                        np.array([alphabets.index(x[1]) for x in all_vals][60000:])
+    xtrain = xtrain.reshape(60000, 784)
+    xtest = xtest.reshape(10000, 784)
+    return (xtrain, ytrain, xtest, ytest)
 
-            # Encoding labels. Example 4 becomes [0,0,0,0,1,0,0,0,0,0]
-            num_classes = 10
-            self.y_train = np_utils.to_categorical(y_train, n_classes)
-            self.y_test = np_utils.to_categorical(y_test, n_classes)
+
+class Neural():
+    def __init__(self):
+        ''' The Constructor '''
+        self.x_train, self.y_train, self.x_test, self.y_test = load_external_data()
+        self.x_train = self.x_train.astype('float32')
+        self.x_test = self.x_test.astype('float32')
+        self.x_train /= 255
+        self.x_test /= 255
+
+        # Encoding labels. Example 4 becomes [0,0,0,0,1,0,0,0,0,0]
+        n_classes = 10
+        self.y_train = np_utils.to_categorical(self.y_train, n_classes)
+        self.y_test = np_utils.to_categorical(self.y_test, n_classes)
 
 
         # building a linear stack of layers with the sequential model
@@ -54,27 +66,6 @@ class Neural():
         self.model.compile(loss='categorical_crossentropy', metrics=['accuracy'],
                         optimizer='adam')
 
-    def load_data(self):
-        ''' Loads data from Mnist if data is not provided '''
-        (X_train, y_train), (X_test, y_test) = mnist.load_data()
-
-        # Reshape x_train and y_train into 2D arrays
-        X_train = X_train.reshape(60000, 784)
-        X_test = X_test.reshape(10000, 784)
-        X_train = X_train.astype('float32')
-        X_test = X_test.astype('float32')
-
-        # normalizing the data to help with the training
-        X_train /= 255
-        X_test /= 255
-
-        # one-hot encoding using keras' numpy-related utilities
-        n_classes = 10
-        Y_train = np_utils.to_categorical(y_train, n_classes)
-        Y_test = np_utils.to_categorical(y_test, n_classes)
-
-        return (X_train, Y_train, X_test, Y_test)
-
     def train_model(self, e=1):
         ''' Trains the model '''
         # Default epoch is set to 1
@@ -84,10 +75,7 @@ class Neural():
         ''' Predicts meaning of symbols. Returns an array of predictions '''
         return self.model.predict(self.x_test)
 
-if __name__ == '__main__':
-    nn = Neural()
-    nn.train_model()
-    pred = nn.give_meaning()
-    # graph(nn.x_test)
-    for i in range(10):
-        print(pred[i], nn.y_test[i])
+# if __name__ == '__main__':
+    # nn = Neural()
+    # nn.train_model()
+    # pred = nn.give_meaning()
