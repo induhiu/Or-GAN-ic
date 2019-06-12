@@ -13,7 +13,7 @@ from secrets import randbelow
 random_dim = 100
 directions = ((1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 1), (-1, 0), (-1, -1))
 
-class Forest:
+class ForestGrid:
     def __init__(self, size):
         # a size smaller than 3 would allow for a "deku tree" that is on the
         # edge of the graph, which is undesirable
@@ -71,7 +71,7 @@ class Forest:
         output = ''
         for li in self.forest:
             for t in li:
-                output += (('X' + ' ' * 9) if t is None else (t.__str__() + (10-len(t.__str__())) * ' '))
+                output += (('X' + ' ' * 9) if not t else (t.__str__() + (10-len(t.__str__())) * ' '))
             output += '\n\n'
         return output
 
@@ -83,11 +83,31 @@ class Forest:
                     gan.GAN(generator=t.generator, discriminator=self.forest[t.id[0] + d[0]][t.id[1] + d[1]].discriminator).train()
                     # this gan needs to be fed the language of its discriminator's tree's generator
 
+class Forest:
+    def __init__(self):
+        self.deku = tree.Tree(location=(0, 0))
+        self.locations = {(0, 0): self.deku}
+        self.connections = {(0, 0): []}
+
+    def grow(self):
+        child = choice(list(self.locations.values())).spawnChild()
+        self.locations[child.location] = child
+        self.connections[child.location] = [child.parent.location]
+        self.connections[child.parent.location].append(child.location)
+
+    def age(self):
+        for t in list(self.locations.values()):
+            t.age += 1
+
 def main():
-    forest = Forest(5)
-    for _ in range(20):
-        forest.grow()
-    print(forest)
+    forest = Forest()
+    forest.age()
+    forest.grow()
+    forest.age()
+    forest.age()
+    forest.grow()
+    print(forest.connections)
+
 
 if __name__ == '__main__':
     main()
