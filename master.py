@@ -4,8 +4,9 @@
     Summer 2019 """
 
 import numpy as np
-# import forest
+import forest
 import gan
+import pickle
 
 def slicedata(dic, size):
     vals = list(dic.values())
@@ -14,13 +15,16 @@ def slicedata(dic, size):
     return (li1, li2)
 
 def main():
-    xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)
-    xtrain = np.array(xtrain)
-    xtest = np.array(xtest)
-    # print(xtrain)
+    # xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)
+    # xtrain = np.array(xtrain)
+    # xtest = np.array(xtest)
+    # # print(xtrain)
+    #
+    # ganny = gan.GAN(100, x_train=xtrain, x_test=xtest)
+    # ganny.train(10)
+    b = pickle.load(open('lang.txt', 'rb'))
 
-    ganny = gan.GAN(100, x_train=xtrain, x_test=xtest)
-    ganny.train(10)
+    print(len(b))
 
 if __name__ == "__main__":
     main()

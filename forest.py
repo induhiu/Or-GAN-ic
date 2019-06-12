@@ -10,6 +10,8 @@ from random import choice
 import numpy as np
 from secrets import randbelow
 from language_getter import produce_language
+from pickle import load
+from pickle import dump
 
 random_dim = 100
 directions = ((1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 1), (-1, 0), (-1, -1))
@@ -87,8 +89,15 @@ class ForestGrid:
 class Forest:
     def __init__(self):
         self.deku = tree.Tree(location=(0, 0))
+        print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
+        print("Learning...")
+        gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=25)
+        print("Deku Tree has learned the common language. Resetting Deku's discriminator...")
+        self.deku.resetDiscriminator()
+        print("Finishing...")
         self.locations = {(0, 0): self.deku}
         self.connections = {(0, 0): []}
+        print("Forest generated!")
 
     def grow(self, rate=1, years=1):
         for _ in range(years):
@@ -114,11 +123,10 @@ class Forest:
             if t.parent: #handle deku
                 gan.GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
 
-
 def main():
     forest = Forest()
-    forest.grow(rate=1, years=5)
-    print(forest.connections.keys())
+    # forest.grow(rate=1, years=5)
+    # print(forest.connections.keys())
 
 
 if __name__ == '__main__':
