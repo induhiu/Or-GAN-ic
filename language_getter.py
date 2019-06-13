@@ -8,8 +8,8 @@ import sys
 
 def produce_language(gen, n=600):
     ''' Produces the language i.e. a 2d array of values ranging from 0 to 255.
-    Takes a generator and optional n as parameters and returns a numpy array
-    of n * 100 images  '''
+    Takes a generator(the seq model, not the object) and optional n as
+    parameters and returns a numpy array of n * 100 images  '''
     noise = np.random.normal(0, 1, size=(100, 100))
     all_generated_images = []
     for i in range(n):

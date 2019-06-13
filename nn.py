@@ -1,5 +1,6 @@
 ''' Neural network implementation. Will be used to give meaning to images.
-    Documentation(some) by Ian Nduhiu'''
+    Documentation(some) by Ian Nduhiu. Find an example implementation at the
+    bottom of the code'''
 # Adapted from https://nextjournal.com/gkoehler/digit-recognition-with-keras
 
 # imports for array-handling and plotting
@@ -84,13 +85,20 @@ class Neural():
     def get_count(self, language):
         ''' Returns individual counts of the testing data'''
         pred = self.give_meaning(language)
+        # Create a counter object to count each entry
         my_counter = Counter([alphabets[list(x).index(max(x))] for x in pred])
         return my_counter
 
-if __name__ == '__main__':
-    my_gan = gan.GAN()
-    my_gan.train(epochs=10, plot=False)
-    nn = Neural()
-    nn.train_model(e=1)
-    # current_count = nn.get_count(nn.x_test)
-    my_counter = nn.get_count(produce_language(my_gan.G))
+#  ------------------------------------------------------------------------  #
+# # This is an example of how to use the neural network in our gan
+# # implementation. You can use it for your reference
+# if __name__ == '__main__':
+    # # Creating a gan
+    # my_gan = gan.GAN()
+    # my_gan.train(epochs=10, plot=False)
+    # # Creating a neural network object
+    # nn = Neural()
+    # nn.train_model(e=1)
+    # # Get how many of each are produced by a gan
+    # my_counter = nn.get_count(produce_language(my_gan.G).reshape(60000, 784))
+    # print(my_counter)
