@@ -141,7 +141,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and id % 10==0:
+            if plot:
                 all_generated_images.append(plot_generated_images(id, self.G))
             id += 1
         return all_generated_images
@@ -188,7 +188,8 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
         newfile = filename + '(' + str(copy) + ')'
         copy += 1
     plt.savefig(newfile)
+    plt.close('all')
     return generated_images
 
 # if __name__ == '__main__':
-    # GAN().train()
+#     GAN().train()

@@ -18,12 +18,17 @@ from keras.utils import np_utils
 # for reading data from text file
 import pickle
 
+import gan
+from language_getter import produce_language
+
+from collections import Counter
 # for exits while debugging, use sys.exit()
 import sys
 
+alphabets = 'ABCEDFGHIJ'
+
 def load_external_data():
     ''' Returns externally loaded datasets for training neural network '''
-    alphabets = 'ABCEDFGHIJ'
     all_vals = pickle.load(open('lang_for_nn.txt', 'rb'))
     xtrain, xtest = np.array([x[0] for x in all_vals][:60000]),\
                         np.array([x[0] for x in all_vals][60000:])
@@ -71,11 +76,21 @@ class Neural():
         # Default epoch is set to 1
         self.model.fit(self.x_train, self.y_train, epochs=e, batch_size=128)
 
-    def give_meaning(self):
+    def give_meaning(self, data=None):
         ''' Predicts meaning of symbols. Returns an array of predictions '''
-        return self.model.predict(self.x_test)
+        return self.model.predict(self.x_test) if data is None\
+            else self.model.predict(data)
 
-# if __name__ == '__main__':
-    # nn = Neural()
-    # nn.train_model()
-    # pred = nn.give_meaning()
+    def get_count(self, language):
+        ''' Returns individual counts of the testing data'''
+        pred = self.give_meaning(language)
+        my_counter = Counter([alphabets[list(x).index(max(x))] for x in pred])
+        return my_counter
+
+if __name__ == '__main__':
+    my_gan = gan.GAN()
+    my_gan.train(epochs=10, plot=False)
+    nn = Neural()
+    nn.train_model(e=1)
+    # current_count = nn.get_count(nn.x_test)
+    my_counter = nn.get_count(produce_language(my_gan.G))
