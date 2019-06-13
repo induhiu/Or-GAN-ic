@@ -82,6 +82,10 @@ def graph(trees):
 
 
 
+    radii = [(k.age * 10 if k.age <= 15 else 150) for k in coords]
+
+    labels = {t: t.age for t in coords}
+
     # radii = [value[2] for value in dct.values()]
     # labels = {key: value[0] for key, value in dct.items()}
 
@@ -95,28 +99,29 @@ def graph(trees):
 
     nx.draw_networkx_edges(G,
                            coords,
-                           width = 5,
+                           width = 2,
                            alpha = 0.5,
-                           style = 'dashed',
                            solid_capstyle = 'round'
                            )
 
     nx.draw_networkx_nodes(G,
                            coords,
-                           # node_size = radii,
+                           node_size = radii,
                            node_color = 'g',
                            alpha = 0.9
                            )
 
-    # nx.draw_networkx_labels(G,
-    #                         coords,
-    #                         labels,
-    #                         font_size = 24,
-    #                         font_color = 'b',
-    #                         alpha = 0.8)
+    nx.draw_networkx_labels(G,
+                            coords,
+                            labels,
+                            font_size = 24,
+                            font_color = 'b',
+                            alpha = 0.8)
 
-    # plt.axis('off')
+    #plt.axis('on')
     plt.show()
+    plt.savefig('test.png')
+    plt.close('all')
 
 
 if __name__ == '__main__':

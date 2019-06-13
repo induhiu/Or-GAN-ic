@@ -37,7 +37,7 @@ class Tree:
     def getnewneighbors(self):
         for t in self.forest.trees:
             if (t is not self.parent and t is not self and t not in self.neighbors and
-                ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1])) <=  (self.age * 10) ** 2):
+                ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1])) <=  (self.age * 10 if self.age <= 15 else 150) ** 2):
                 self.forest.connections[self].append(t)
                 self.forest.connections[t].append(self)
                 self.neighbors.append(t)
