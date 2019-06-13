@@ -1,4 +1,4 @@
-''' Gets language from a gan to pass to another gan. Implementation and 
+''' Gets language from a gan to pass to another gan. Implementation and
 documentation by Ian Nduhiu '''
 
 from PIL import Image
@@ -20,7 +20,7 @@ def produce_language(gen, n=600):
         #     generated = gen.G.predict(noise)
         # # Comment out the line below if you intend to use the debugging code
         # # above
-        generated = gen.G.predict(noise)
+        generated = gen.predict(noise)
         generated = generated.reshape(100, 28, 28)
         generated = (generated * 127.5) + 127.5
         generated = np.array(generated, dtype='int64')
