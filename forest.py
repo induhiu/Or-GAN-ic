@@ -65,6 +65,7 @@ class ForestGrid:
     def grow(self, rate=1):
         """ The forest ages. All trees get their age incremented, and new
             trees appear at the rate given as a parameter. """
+        print('Growing...')
         for t in self.trees:
             t.age += 1
         while randbelow(100) < rate * 100:
@@ -91,48 +92,44 @@ class Forest:
         self.deku = tree.Tree(location=(0, 0), forest=self)
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
         print("Learning...")
-        gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=50)
+        # gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=50)
         print("Deku Tree has learned the common language. Resetting Deku's discriminator...")
         self.deku.resetDiscriminator()
         print("Finishing...")
-        self.locations = {(0, 0): self.deku}
-        self.connections = {(0, 0): []}
+        self.trees = [self.deku]
+        self.connections = {self.deku: []}
         print("Forest generated!")
 
     def grow(self, rate=1, years=1):
         for _ in range(years):
             r = rate
             self.age()
-            for t in list(self.locations.values()):
+            for t in self.trees:
                 t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
 
     def spawn(self):
-        parent = choice(list(self.locations.values()))
+        parent = choice(self.trees)
         while parent.age == 0:
-            parent = choice(list(self.locations.values()))
-        child = parent.spawnChild()
-        self.locations[child.location] = child
-        self.connections[child.location] = [child.parent.location]
-        self.connections[child.parent.location].append(child.location)
+            parent = choice(self.trees)
+        self.trees.append(parent.spawnChild())
 
     def age(self):
-        for t in list(self.locations.values()):
+        for t in self.trees:
             t.age += 1
 
     def allParentCommunicate(self):
-        for t in list(self.locations.values()):
+        for t in self.trees:
             if t.parent: #handle deku
                 gan.GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
 
 def main():
     forest = Forest()
-    forest.grow(rate=.5, years=10)
-    for t in forest.locations:
-        print(forest.locations[t])
-    print(forest.connections[(0, 0)])
+    forest.grow(rate=.3, years=30)
+    for t in forest.trees:
+        print(t, t.neighbors)
 
 
 if __name__ == '__main__':
