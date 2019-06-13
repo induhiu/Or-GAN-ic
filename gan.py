@@ -61,6 +61,9 @@ class Discriminator:
 
         self.D.trainable = False
 
+    def reset(self):
+        self.__init__()
+
 class GAN:
     def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
                  generator=Generator(Adam(lr=0.0002, beta_1=0.5))):
@@ -141,7 +144,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            if plot and id == epochs:
                 all_generated_images.append(plot_generated_images(id, self.G))
             id += 1
         return all_generated_images
