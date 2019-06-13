@@ -10,8 +10,7 @@ from random import choice
 import numpy as np
 from secrets import randbelow
 from language_getter import produce_language
-from pickle import load
-from pickle import dump
+from graphing import graph as visualize
 
 random_dim = 100
 directions = ((1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 1), (-1, 0), (-1, -1))
@@ -104,8 +103,8 @@ class Forest:
         for _ in range(years):
             r = rate
             self.age()
-            for t in self.trees:
-                t.getnewneighbors()
+            # for t in self.trees:
+            #     t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
@@ -125,11 +124,16 @@ class Forest:
             if t.parent: #handle deku
                 gan.GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
 
+    def graph(self):
+        visualize(self.trees)
+
+
 def main():
     forest = Forest()
-    forest.grow(rate=.3, years=30)
-    for t in forest.trees:
-        print(t, t.neighbors)
+    forest.grow(rate=20, years=1)
+    forest.grow(rate=0, years=3)
+    forest.grow(rate=1, years=1)
+    forest.graph()
 
 
 if __name__ == '__main__':
