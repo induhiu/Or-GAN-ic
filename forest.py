@@ -103,17 +103,18 @@ class Forest:
         for _ in range(years):
             r = rate
             self.age()
-            # for t in self.trees:
-            #     t.getnewneighbors()
+            for t in self.trees:
+                t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
 
     def spawn(self):
         parent = choice(self.trees)
-        while parent.age == 0:
+        while parent.age == 1:
             parent = choice(self.trees)
         self.trees.append(parent.spawnChild())
+        #self.trees.append(self.deku.spawnChild())
 
     def age(self):
         for t in self.trees:
@@ -130,9 +131,8 @@ class Forest:
 
 def main():
     forest = Forest()
-    forest.grow(rate=20, years=1)
-    forest.grow(rate=0, years=3)
-    forest.grow(rate=1, years=1)
+    forest.grow(rate=1, years=20)
+    #forest.grow(rate=8, years=2)
     forest.graph()
 
 

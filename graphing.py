@@ -21,6 +21,7 @@
 
 import networkx as nx
 import matplotlib.pyplot as plt
+import math
 # import sys
 # import pickle
 # from matplotlib.axes._axes import _log as matplotlib_axes_logger
@@ -82,7 +83,7 @@ def graph(trees):
 
 
 
-    radii = [(k.age * 10 if k.age <= 15 else 150) for k in coords]
+    #radii = [890000 * math.log10(k.age) for k in coords]
 
     labels = {t: t.age for t in coords}
 
@@ -99,14 +100,14 @@ def graph(trees):
 
     nx.draw_networkx_edges(G,
                            coords,
-                           width = 2,
+                           width = 1,
                            alpha = 0.5,
                            solid_capstyle = 'round'
                            )
 
     nx.draw_networkx_nodes(G,
                            coords,
-                           node_size = radii,
+                           node_size = 100,
                            node_color = 'g',
                            alpha = 0.9
                            )
@@ -114,12 +115,12 @@ def graph(trees):
     nx.draw_networkx_labels(G,
                             coords,
                             labels,
-                            font_size = 24,
+                            font_size = 8,
                             font_color = 'b',
                             alpha = 0.8)
 
     #plt.axis('on')
-    plt.show()
+    #plt.show()
     plt.savefig('test.png')
     plt.close('all')
 
