@@ -88,13 +88,9 @@ class ForestGrid:
 
 class Forest:
     def __init__(self):
-        self.deku = tree.Tree(location=(0, 0), forest=self)
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
-        print("Learning...")
-        # gan.GAN(generator=self.deku.generator, discriminator=self.deku.discriminator, x_train=np.array(load(open('lang.txt', 'rb'))[:60000])).train(epochs=50)
-        print("Deku Tree has learned the common language. Resetting Deku's discriminator...")
-        self.deku.resetDiscriminator()
-        print("Finishing...")
+        print("Creating Deku Tree...")
+        self.deku = tree.Tree(location=(0, 0), forest=self, generator=gan.Generator(g=load_model('dekugen30.h5')))
         self.trees = [self.deku]
         self.connections = {self.deku: []}
         print("Forest generated!")
