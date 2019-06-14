@@ -147,7 +147,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and id % 5 == 0 and id != 30:
+            if plot and epochs == id:
                 all_generated_images.append(plot_generated_images(id, self.G))
             id += 1
         return all_generated_images

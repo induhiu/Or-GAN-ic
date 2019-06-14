@@ -91,7 +91,7 @@ class Forest:
     def __init__(self):
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
         print("Creating Deku Tree...")
-        self.deku = tree.Tree(location=(0, 0), forest=self, generator=gan.Generator(g=load_model('dekugen30.h5')))
+        self.deku = tree.Tree(location=(0, 0), forest=self, generator=gan.Generator(g=load_model('./saveddekus/dekugen30.h5')))
         self.trees = [self.deku]
         self.connections = {self.deku: []}
         print("Forest generated!")
@@ -100,8 +100,8 @@ class Forest:
         for _ in range(years):
             r = rate
             self.age()
-            #for t in self.trees:
-                #t.getnewneighbors()
+            for t in self.trees:
+                t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
@@ -128,7 +128,7 @@ class Forest:
 
 def main():
     forest = Forest()
-    forest.grow(rate=1, years=2)
+    forest.grow(rate=1, years=5)
     #forest.grow(rate=8, years=2)
     forest.graph()
 
