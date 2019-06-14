@@ -8,8 +8,8 @@ from secrets import randbelow
 random_dim = 100
 
 class Tree:
-    def __init__(self, location, forest, parent=None):
-        self.generator = gan.Generator()
+    def __init__(self, location, forest, parent=None, generator=gan.Generator()):
+        self.generator = generator
         self.discriminator = gan.Discriminator()
         self.age = 1
         self.location = location

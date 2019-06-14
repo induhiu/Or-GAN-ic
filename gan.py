@@ -32,19 +32,22 @@ np.random.seed(10)
 random_dim = 100
 
 class Generator:
-    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5)):
-        self.G = Sequential()
-        self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
-        self.G.add(LeakyReLU(0.2))
+    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5), g=None):
+        if g:
+            self.G = g
+        else:
+            self.G = Sequential()
+            self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
+            self.G.add(LeakyReLU(0.2))
 
-        self.G.add(Dense(512))
-        self.G.add(LeakyReLU(0.2))
+            self.G.add(Dense(512))
+            self.G.add(LeakyReLU(0.2))
 
-        self.G.add(Dense(1024))
-        self.G.add(LeakyReLU(0.2))
+            self.G.add(Dense(1024))
+            self.G.add(LeakyReLU(0.2))
 
-        self.G.add(Dense(784, activation='tanh'))
-        self.G.compile(loss='binary_crossentropy', optimizer=optimizer)
+            self.G.add(Dense(784, activation='tanh'))
+            self.G.compile(loss='binary_crossentropy', optimizer=optimizer)
 
 class Discriminator:
     def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5)):
@@ -65,6 +68,9 @@ class Discriminator:
         self.D.compile(loss='binary_crossentropy', optimizer=optimizer)
 
         self.D.trainable = False
+
+    def reset(self):
+        self.__init__()
 
 class GAN:
     def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
@@ -143,7 +149,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            if plot and id % 5 == 0 and id != 30:
                 all_generated_images.append(plot_generated_images(id, self.G))
             id += 1
         return all_generated_images

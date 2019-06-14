@@ -5,37 +5,34 @@
 
 import numpy as np
 # import forest
-# import gan
-import pickle
+import gan
+from pickle import load
+from language_getter import produce_language
+from tensorflow.keras.models import load_model
 
-my_dict = np.load('imgarys.npz')
-#
-# def slicedata(dic, size):
-#     vals = list(dic.values())
-#     li1 = vals[:size]
-#     li2 = vals[size:]
-#     return (li1, li2)
 
-def sliced_key_and_val(key):
-    ''' Returns a list of the value and its label '''
-    return [my_dict[key], key[0]]
 
 def main():
-    # xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)
-    # xtrain = np.array(xtrain)
-    # xtest = np.array(xtest)
-    # # print(xtrain)
-    #
-    # ganny = gan.GAN(100, x_train=xtrain, x_test=xtest)
-    # ganny.train(10)
-    # b = pickle.load(open('lang.txt', 'rb'))
+    # gen1 = gan.Generator()
+    # # gen2 = gan.Generator()
+    # # gen3 = gan.Generator()
+    # disc = gan.Discriminator()
 
-    # print(len(b))
-    results = list(map(sliced_key_and_val, list(my_dict.keys())))
-    with open('lang_for_nn.txt', 'wb') as file:
-        pickle.dump(results, file)
-    print(results[0])
-    print(len(results))
+    gansington = gan.GAN(x_train=np.array(load(open('lang_for_gan.txt', 'rb'))[:60000]))
+    for i in range(1, 41):
+        gansington.train(id=i)
+        if i % 5 == 0 and i != 30:
+            gansington.G.save('dekugen' + str(i) + '.h5')
+
+    # disc.reset()
+    # gan.GAN(generator=gen2, discriminator=disc, x_train=produce_language(gen1.G)).train(epochs=15)
+    # disc.reset()
+    # gan.GAN(generator=gen3, discriminator=disc, x_train=produce_language(gen2.G)).train(epochs=10)
+
+    # gen = load_model('dekugen30.h5')
+    # gen1 = gan.Generator(g=gen)
+    # gan.GAN(x_train=produce_language(gen1.G)).train(epochs=10)
+
 
 
 if __name__ == "__main__":
