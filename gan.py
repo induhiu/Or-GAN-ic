@@ -17,6 +17,11 @@ from tensorflow.keras.datasets import mnist
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import initializers
 
+from tensorflow.keras.models import load_model
+import language_getter
+import pickle
+
+
 # Let Keras know that we are using tensorflow as our backend engine
 os.environ["KERAS_BACKEND"] = "tensorflow"
 
@@ -93,9 +98,6 @@ class GAN:
         else:
             batch_count = 1
 
-        # print(x_train[0])
-        # sys.exit()
-
         generated_images = None
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % id, '-'*15)
@@ -152,10 +154,6 @@ class GAN:
 def load_minst_data():
     # load the data
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    print(type(x_train[0]))
-    # img = Image.fromarray(x_train[0])
-    # img.save('test.png')
-    # sys.exit()
     # reshape the xtrain
     x_train = reshape_x(x_train)
     x_test = x_test.reshape(10000, 784)
@@ -192,4 +190,9 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     return generated_images
 
 # if __name__ == '__main__':
-#     GAN().train()
+    # GAN().train()
+    # vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
+    # gan = GAN(x_train=vals)
+    # with open('counter.txt', 'wb') as file:
+        # pickle.dump(gan.train(epochs=10, plot=False), file)
+    # gan.train(epochs=10, plot=False)
