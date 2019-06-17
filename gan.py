@@ -208,15 +208,15 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.close('all')
     return generated_images
 
-if __name__ == '__main__':
-    # GAN().train(epochs=20)
-    vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
-    my_gan = GAN(x_train=vals)
-    my_gan.train(epochs=30)
-    gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
-    gan2.train(epochs=15)
-    gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
-    gan3.train(epochs=15)
+# if __name__ == '__main__':
+#     # GAN().train(epochs=20)
+#     vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
+#     my_gan = GAN(x_train=vals)
+#     my_gan.train(epochs=30)
+#     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
+#     gan2.train(epochs=15)
+#     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
+#     gan3.train(epochs=15)
     # with open('counter.txt', 'wb') as file:
         # pickle.dump(gan.train(epochs=10, plot=False), file)
     # gan.train(epochs=10, plot=False)
