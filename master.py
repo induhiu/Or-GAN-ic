@@ -18,11 +18,9 @@ def main():
     gen2 = Generator()
     gen3 = Generator()
 
-    dekug = load_model('./saveddekus/dekugen20.h5')
-<<<<<<< HEAD
-    GAN(generator=gen1, x_train=produce_language(dekug)).train(epochs=10)
-    GAN(generator=gen2, x_train=produce_language(gen1.G)).train(epochs=10)
-    GAN(generator=gen3, x_train=produce_language(gen2.G)).train(epochs=10)
+    dekug = load_model('./saveddekus/dekugen25.h5')
+    GAN(generator=gen1, x_train=produce_language(dekug)).train(epochs=20)
+    GAN(generator=gen2, x_train=produce_language(gen1.G)).train(epochs=20)
     # my_nn = load_model('nn.h5')
     # dekug = load_model('./saveddekus/dekugen20.h5')
     # lang = produce_language(dekug)
@@ -30,14 +28,6 @@ def main():
     # pred = my_nn.predict(lang)
     # my_counter = Counter('ABCDEFGHIJ'[list(x).index(max(x))] for x in pred)
     # print(my_counter)
-=======
-    lang = produce_language(dekug)
-    print(lang.shape)
-    pred = my_nn.predict(lang)  # contains arrays with shape (10, 1)
-    print(pred)
-    my_counter = Counter('ABCDEFGHIJ'[list(x).index(max(x))] for x in pred)
-    print(my_counter)
->>>>>>> 436b43b0c506a18befab87c3f2a59c78794417b6
 
 if __name__ == "__main__":
     main()

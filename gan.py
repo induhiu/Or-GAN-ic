@@ -159,7 +159,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            if plot and epochs == id:
                 all_generated_images.append(plot_generated_images(id, self.G))
             # if e > 0:
             # old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))

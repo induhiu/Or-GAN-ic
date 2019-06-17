@@ -31,7 +31,7 @@ def produce_language(gen, n=600):
     new_imgs = np.array(all_generated_images)
     # new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
                                 # new_imgs.shape[2], new_imgs.shape[3])
-    return new_imgs.reshape(n * 100, 784)
+    return new_imgs
 
 # if __name__ == '__main__':
 #     xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)
