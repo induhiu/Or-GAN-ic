@@ -5,7 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
-# from PIL import Image
+from PIL import Image
+from random import choice
 
 import tensorflow
 
@@ -105,6 +106,9 @@ class GAN:
             batch_count = 1
 
         generated_images = None
+
+        # # Testing out experience replay
+        # old_imgs = []
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
@@ -115,21 +119,27 @@ class GAN:
 
                 # Generate fake MNIST images
                 generated_images = self.G.predict(noise)
-                # print(generated_images.shape)
-                # sys.exit()
-                # print(noise.shape)
-                # print(image_batch.shape)
-                # print(generated_images.shape)
-                new_noise = np.random.normal(0, 1, size=[batch_size, 784])
-                # print(new_noise.shape)
-                X = np.concatenate([image_batch, new_noise, generated_images])
-                # print(X.shape)
-                # sys.exit()
 
+                # new_noise = np.random.normal(0, 1, size=[batch_size, 784])
+
+                # X = np.concatenate([image_batch, new_noise, generated_images])
+                X = np.concatenate([image_batch, generated_images])
+                y_dis = np.zeros(2*batch_size)
+                # experience_rep = []
+                # if e > 1:
+                #     x = np.array(old_imgs[-4:]).reshape(800, 784)
+                #     experience_rep = np.array([choice(x) for _ in range(128)])
+                #
+                #     # print()
+                #     # print(x.shape)
+                #     # print(experience_rep.shape)
+                #     # sys.exit()
+                #     X = np.concatenate([image_batch, x, generated_images])
+                #     y_dis = np.zeros(3*batch_size)
                 # Labels for generated and real data
                 # y_dis = np.zeros(2*batch_size)
 
-                y_dis = np.zeros(3*batch_size)
+                # y_dis = np.zeros(3*batch_size)
                 # One-sided label smoothing
                 y_dis[:batch_size] = 0.9
 
@@ -149,8 +159,11 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and epochs == id:
+            if plot:
                 all_generated_images.append(plot_generated_images(id, self.G))
+            # if e > 0:
+            # old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
+            # old_imgs = []
             id += 1
         return all_generated_images
 
@@ -196,9 +209,14 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     return generated_images
 
 # if __name__ == '__main__':
-    # GAN().train()
-    # vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
-    # gan = GAN(x_train=vals)
+#     # GAN().train(epochs=20)
+#     vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
+#     my_gan = GAN(x_train=vals)
+#     my_gan.train(epochs=30)
+#     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
+#     gan2.train(epochs=15)
+#     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
+#     gan3.train(epochs=15)
     # with open('counter.txt', 'wb') as file:
         # pickle.dump(gan.train(epochs=10, plot=False), file)
     # gan.train(epochs=10, plot=False)
