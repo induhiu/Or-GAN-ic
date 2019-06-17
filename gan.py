@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import sys
-from PIL import Image
+# from PIL import Image
 
 import tensorflow
 
