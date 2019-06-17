@@ -1,12 +1,12 @@
 ''' Gets language from a gan to pass to another gan. Implementation and
 documentation by Ian Nduhiu '''
 
-from PIL import Image
+# from PIL import Image
 import numpy as np
 import gan
 import sys
 
-def produce_language(gen, n=600):
+def produce_language(gen, n=10):
     ''' Produces the language i.e. a 2d array of values ranging from 0 to 255.
     Takes a generator(the seq model, not the object) and optional n as
     parameters and returns a numpy array of n * 100 images  '''
@@ -24,11 +24,13 @@ def produce_language(gen, n=600):
         generated = generated.reshape(100, 28, 28)
         generated = (generated * 127.5) + 127.5
         generated = np.array(generated, dtype='int64')
-        all_generated_images.append(generated)
+        # all_generated_images.append(generated)
+        for img in generated:
+            all_generated_images.append(img)
     new_imgs = np.array(all_generated_images)
-    new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
-                                new_imgs.shape[2], new_imgs.shape[3])
-    return new_imgs
+    # new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
+                                # new_imgs.shape[2], new_imgs.shape[3])
+    return new_imgs.reshape(n * 100, 784)
 
 # if __name__ == '__main__':
 #     xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)

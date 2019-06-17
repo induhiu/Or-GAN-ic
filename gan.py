@@ -127,8 +127,8 @@ class GAN:
                 y_dis = np.zeros(2*batch_size)
                 experience_rep = []
                 if e > 1:
-                    x = np.array(old_imgs).reshape(200, 784)[:128]
-                    # experience_rep = np.array([choice(x) for _ in range(128)])
+                    x = np.array(old_imgs[-4:]).reshape(800, 784)
+                    experience_rep = np.array([choice(x) for _ in range(128)])
 
                     # print()
                     # print(x.shape)
@@ -161,9 +161,9 @@ class GAN:
                     else None
             if plot:
                 all_generated_images.append(plot_generated_images(id, self.G))
-            if e > 0:
-                old_imgs = []
+            # if e > 0:
             old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
+            # old_imgs = []
             id += 1
         return all_generated_images
 
