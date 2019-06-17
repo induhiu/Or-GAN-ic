@@ -4,7 +4,9 @@
     Implementation by Kenny Talarico as part of summer research with Ian Nduhiu
     and advisor David Perkins, June 2019. """
 
-import gan
+from gan import Generator
+from gan import Discriminator
+from gan import GAN
 import tree
 from random import choice
 import numpy as np
@@ -84,14 +86,14 @@ class ForestGrid:
         for t in self.trees:
             for d in directions:
                 if self.forest[t.id[0] + d[0]][t.id[1] + d[1]] and self.forest[t.id[0] + d[0]][t.id[1] + d[1]].age > t.age:
-                    gan.GAN(generator=t.generator, discriminator=self.forest[t.id[0] + d[0]][t.id[1] + d[1]].discriminator).train()
+                    GAN(generator=t.generator, discriminator=self.forest[t.id[0] + d[0]][t.id[1] + d[1]].discriminator).train()
                     # this gan needs to be fed the language of its discriminator's tree's generator
 
 class Forest:
     def __init__(self):
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
         print("Creating Deku Tree...")
-        self.deku = tree.Tree(location=(0, 0), forest=self, generator=gan.Generator(g=load_model('./saveddekus/dekugen30.h5')))
+        self.deku = tree.Tree(location=(0, 0), forest=self, generator=Generator(g=load_model('./saveddekus/dekugen30.h5')))
         self.trees = [self.deku]
         self.connections = {self.deku: []}
         print("Forest generated!")
@@ -120,7 +122,7 @@ class Forest:
     def allParentCommunicate(self):
         for t in self.trees:
             if t.parent: #handle deku
-                gan.GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
+                GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
 
     def graph(self):
         visualize(self.trees)

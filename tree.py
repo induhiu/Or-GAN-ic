@@ -1,16 +1,18 @@
 """ Implementation for a "tree" class. By Kenny Talarico and Ian Nduhiu, June
     2019. """
 
-import gan
+from gan import Generator
+from gan import Discriminator
+from gan import GAN
 import math
 from secrets import randbelow
 
 random_dim = 100
 
 class Tree:
-    def __init__(self, location, forest, parent=None, generator=gan.Generator()):
+    def __init__(self, location, forest, parent=None, generator=Generator()):
         self.generator = generator
-        self.discriminator = gan.Discriminator()
+        self.discriminator = Discriminator()
         self.age = 1
         self.location = location
         self.parent = parent
@@ -33,7 +35,7 @@ class Tree:
         return child
 
     def resetDiscriminator(self):
-        self.discriminator = gan.Discriminator()
+        self.discriminator = Discriminator()
 
     def getnewneighbors(self):
         for t in self.forest.trees:
