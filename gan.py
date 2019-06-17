@@ -126,15 +126,15 @@ class GAN:
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
                 # experience_rep = []
-                # if e > 1:
+                # if e != 0 and e % 5 == 0:
                 #     x = np.array(old_imgs[-4:]).reshape(800, 784)
                 #     experience_rep = np.array([choice(x) for _ in range(128)])
-                #
-                #     # print()
-                #     # print(x.shape)
-                #     # print(experience_rep.shape)
-                #     # sys.exit()
-                #     X = np.concatenate([image_batch, x, generated_images])
+                # #
+                # #     # print()
+                # #     # print(x.shape)
+                # #     # print(experience_rep.shape)
+                # #     # sys.exit()
+                #     X = np.concatenate([image_batch, experience_rep, generated_images])
                 #     y_dis = np.zeros(3*batch_size)
                 # Labels for generated and real data
                 # y_dis = np.zeros(2*batch_size)
@@ -163,7 +163,6 @@ class GAN:
                 all_generated_images.append(plot_generated_images(id, self.G))
             # if e > 0:
             # old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
-            # old_imgs = []
             id += 1
         return all_generated_images
 
@@ -208,15 +207,15 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.close('all')
     return generated_images
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     # GAN().train(epochs=20)
-#     vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
-#     my_gan = GAN(x_train=vals)
-#     my_gan.train(epochs=30)
-#     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
-#     gan2.train(epochs=15)
-#     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
-#     gan3.train(epochs=15)
+    vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
+    my_gan = GAN(x_train=vals)
+    my_gan.train(epochs=20)
+    gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
+    gan2.train(epochs=10)
+    gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
+    gan3.train(epochs=10)
     # with open('counter.txt', 'wb') as file:
         # pickle.dump(gan.train(epochs=10, plot=False), file)
     # gan.train(epochs=10, plot=False)

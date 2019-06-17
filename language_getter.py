@@ -25,13 +25,13 @@ def produce_language(gen, n=600):
         generated = generated.reshape(100, 28, 28)
         generated = (generated * 127.5) + 127.5
         generated = np.array(generated, dtype='int64')
-        # all_generated_images.append(generated)
-        for img in generated:
-            all_generated_images.append(img)
+        all_generated_images.append(generated)
+        # for img in generated:
+        #     all_generated_images.append(img)
     new_imgs = np.array(all_generated_images)
-    # new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
-                                # new_imgs.shape[2], new_imgs.shape[3])
-    return new_imgs.reshape(n * 100, 784)
+    new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
+                                new_imgs.shape[2], new_imgs.shape[3])
+    return new_imgs
 
 # if __name__ == '__main__':
 #     xtrain, xtest = slicedata(np.load('imgarys.npz'), 60000)

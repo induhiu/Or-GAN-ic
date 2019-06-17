@@ -19,14 +19,14 @@ from keras.utils import np_utils
 # for reading data from text file
 import pickle
 
-# import gan
-# from language_getter import produce_language
+import gan
+from language_getter import produce_language
 
 from collections import Counter
 # for exits while debugging, use sys.exit()
 import sys
 
-alphabets = '0123456789'
+alphabets = 'ABCDEFGHIJ'
 
 def load_external_data():
     ''' Returns externally loaded datasets for training neural network '''
@@ -43,8 +43,8 @@ def load_external_data():
 class Neural():
     def __init__(self):
         ''' The Constructor '''
-        # self.x_train, self.y_train, self.x_test, self.y_test = load_external_data()
-        (self.x_train, self.y_train), (self.x_test, self.y_test) = mnist.load_data()
+        self.x_train, self.y_train, self.x_test, self.y_test = load_external_data()
+        # (self.x_train, self.y_train), (self.x_test, self.y_test) = mnist.load_data()
         self.x_train = self.x_train.reshape(60000, 784)
         self.x_train = self.x_train.astype('float32')
         self.x_test = self.x_test.astype('float32')
@@ -87,6 +87,8 @@ class Neural():
     def get_count(self, language):
         ''' Returns individual counts of the testing data'''
         pred = self.give_meaning(language)
+        print(pred)
+        print(pred[0])
         # Create a counter object to count each entry
         my_counter = Counter([alphabets[list(x).index(max(x))] for x in pred])
         return my_counter
@@ -96,14 +98,15 @@ class Neural():
 # # implementation. You can use it for your reference
 if __name__ == '__main__':
     # Creating a gan
-    # my_gan = gan.GAN()
-    # my_gan.train(epochs=10, plot=False)
+    my_gan = gan.GAN()
+    my_gan.train(epochs=2, plot=False)
     # Creating a neural network object
     nn = Neural()
-    nn.train_model(e=5)
+    nn.train_model(e=10)
     # If you want to save the model
     # nn.model.save('model.h5')
     # del model
     # Get how many of each are produced by a gan
-    my_counter = nn.get_count(nn.x_test.reshape(10000, 784))
+    # my_counter = nn.get_count(nn.x_test.reshape(10000, 784))
+    my_counter = nn.get_count(produce_language(my_gan.G))
     print(my_counter)
