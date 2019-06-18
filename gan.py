@@ -109,7 +109,7 @@ class GAN:
 
         # # Testing out experience replay
         old_imgs = []
-        for e in range(epochs):
+        for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
                 # Get a random set of input noise and images
@@ -126,8 +126,8 @@ class GAN:
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
                 # experience_rep = []
-                if e != 0 and e % 3 == 0:
-                    x = np.array(old_imgs[-3:]).reshape(600, 784)
+                if e % 5 == 0:
+                    x = np.array(old_imgs[-4:]).reshape(800, 784)
                     experience_rep = np.array([choice(x) for _ in range(128)])
                 # #
                 # #     # print()
@@ -159,7 +159,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            if plot and id % 20 == 0:
                 all_generated_images.append(plot_generated_images(id, self.G))
             # if e > 0:
             old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
