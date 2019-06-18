@@ -159,7 +159,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and id % 20 == 0:
+            if plot:
                 all_generated_images.append(plot_generated_images(id, self.G))
             # if e > 0:
             old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
@@ -207,11 +207,11 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.close('all')
     return generated_images
 #
-# if __name__ == '__main__':
+if __name__ == '__main__':
 # #     # GAN().train(epochs=20)
-#     vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
-#     my_gan = GAN(x_train=vals)
-#     my_gan.train(epochs=20)
+    vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
+    my_gan = GAN(x_train=vals)
+    my_gan.train(epochs=10)
 #     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
 #     gan2.train(epochs=10)
 #     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
