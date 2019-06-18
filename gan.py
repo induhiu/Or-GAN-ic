@@ -20,7 +20,7 @@ from tensorflow.keras import initializers
 
 from tensorflow.keras.models import load_model
 import language_getter
-import pickle
+from pickle import load
 
 
 # Let Keras know that we are using tensorflow as our backend engine
@@ -98,17 +98,18 @@ class GAN:
             x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] ** 2)
         else:
             x_train, y_train, x_test, y_test = load_minst_data()
-        # \Split the training data into batches of size 128
-        # print(x_train)
+        # Split the training data into batches of size 128
         if x_train.shape[0] >= 128:
             batch_count = x_train.shape[0] // batch_size
         else:
             batch_count = 1
 
+        # Initializing the variable
         generated_images = None
 
-        # # Testing out experience replay
+        # # Empty list to hold old images for testing out experience replay
         old_imgs = []
+
         for e in range(1, epochs+1):
             print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
@@ -120,26 +121,35 @@ class GAN:
                 # Generate fake MNIST images
                 generated_images = self.G.predict(noise)
 
+                # # If we want to pass noise to the discriminator
                 # new_noise = np.random.normal(0, 1, size=[batch_size, 784])
 
-                # X = np.concatenate([image_batch, new_noise, generated_images])
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
-                # experience_rep = []
-                if e % 5 == 0:
-                    x = np.array(old_imgs[-4:]).reshape(800, 784)
-                    experience_rep = np.array([choice(x) for _ in range(128)])
-                # #
-                # #     # print()
-                # #     # print(x.shape)
-                # #     # print(experience_rep.shape)
-                # #     # sys.exit()
-                    X = np.concatenate([image_batch, experience_rep, generated_images])
-                    y_dis = np.zeros(3*batch_size)
-                # Labels for generated and real data
-                # y_dis = np.zeros(2*batch_size)
 
-                # y_dis = np.zeros(3*batch_size)
+                # -----------------------------------------------------#
+                # Experience replay algorithm(still in testing)
+                # Comment out if you intend to use normal gan
+                # Create an interval
+                interval = 10
+                if e % interval == 0:
+                    # get the four most recent generations and reshape
+                    # array will be in shape (4, 200, 784), will need reshaping
+                    x = np.array(old_imgs[-4:]).reshape(800, 784)
+
+                    # Randomly select images to use. Make sure number of images
+                    # is 25 % of total generated images we will pass
+                    experience_rep = np.array([choice(x) for _ in range(32)])
+
+                    # Combine recently generated images(75%) and old ones(25%)
+                    gen_images = np.array(list(generated_images)[:96] + \
+                                list(experience_rep))
+
+                    # Concatenate the fake images and real ones
+                    X = np.concatenate([image_batch, gen_images])
+
+                # -----------------------------------------------------#
+
                 # One-sided label smoothing
                 y_dis[:batch_size] = 0.9
 
@@ -159,10 +169,14 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot:
+            # Plots the images if plot is set to True(default)
+            if plot and id == 11:
                 all_generated_images.append(plot_generated_images(id, self.G))
-            # if e > 0:
+
+            # Append recent generations to old images list
             old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
+
+            # Increase id
             id += 1
         return all_generated_images
 
@@ -209,9 +223,19 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
 #
 if __name__ == '__main__':
 # #     # GAN().train(epochs=20)
-    vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
-    my_gan = GAN(x_train=vals)
-    my_gan.train(epochs=10)
+    vals = np.array(load(open('lang_for_gan.txt', 'rb'))[:60000])
+    for _ in range(10):
+        gen, disc = Generator(), Discriminator()
+        print(gen, disc)
+        my_gan = GAN(generator=gen, discriminator=disc, x_train=vals)
+        my_gan.train(epochs=11)
+        # disc = Discriminator()
+        # print(gen1 == gen2)
+
+
+        # print(gen, disc)
+        # my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
+        # my_gan.train(epochs=6)
 #     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
 #     gan2.train(epochs=10)
 #     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
