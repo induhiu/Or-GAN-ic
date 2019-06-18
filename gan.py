@@ -159,7 +159,7 @@ class GAN:
             # loss and accuracy
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
-            if plot and epochs == id:
+            if plot:
                 all_generated_images.append(plot_generated_images(id, self.G))
             # if e > 0:
             # old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
@@ -211,11 +211,11 @@ if __name__ == '__main__':
 #     # GAN().train(epochs=20)
     vals = np.array(pickle.load(open('lang_for_gan.txt', 'rb'))[:60000])
     my_gan = GAN(x_train=vals)
-    my_gan.train(epochs=20)
+    my_gan.train(epochs=30)
     gan2 = GAN(x_train=language_getter.produce_language(my_gan.G))
-    gan2.train(epochs=10)
+    gan2.train(epochs=20)
     gan3 = GAN(x_train=language_getter.produce_language(gan2.G))
-    gan3.train(epochs=10)
+    gan3.train(epochs=20)
     # with open('counter.txt', 'wb') as file:
         # pickle.dump(gan.train(epochs=10, plot=False), file)
     # gan.train(epochs=10, plot=False)
