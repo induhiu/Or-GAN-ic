@@ -21,6 +21,7 @@ from tensorflow.keras import initializers
 from tensorflow.keras.models import load_model
 import language_getter
 from pickle import load
+from random import shuffle
 
 
 # Let Keras know that we are using tensorflow as our backend engine
@@ -127,19 +128,21 @@ class GAN:
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
 
-                # -----------------------------------------------------#
-                # Experience replay algorithm(still in testing)
-                # Comment out if you intend to use normal gan
-                # Create an interval
+                # # -----------------------------------------------------#
+                # # Experience replay algorithm(still in testing)
+                # # Comment out if you intend to use normal gan
+                # # Create an interval
                 interval = 10
                 if e % interval == 0:
                     # get the four most recent generations and reshape
-                    # array will be in shape (4, 200, 784), will need reshaping
-                    x = np.array(old_imgs[-4:]).reshape(800, 784)
+                    # array will be in shape (4, 128, 784), will need reshaping
+                    x = np.array(old_imgs[-4:]).reshape(128*4, 784)
+                    # shuffle the array
+                    shuffle(x)
 
                     # Randomly select images to use. Make sure number of images
                     # is 25 % of total generated images we will pass
-                    experience_rep = np.array([choice(x) for _ in range(32)])
+                    experience_rep = np.array([img for img in x[:32]])
 
                     # Combine recently generated images(75%) and old ones(25%)
                     gen_images = np.array(list(generated_images)[:96] + \
@@ -170,11 +173,17 @@ class GAN:
             eval = self.GAN.evaluate(x=x_test, y=y_test, verbose=0) if attack \
                     else None
             # Plots the images if plot is set to True(default)
+            # Can add an extra condition e.g. if id == 10
             if plot and id == 11:
                 all_generated_images.append(plot_generated_images(id, self.G))
 
             # Append recent generations to old images list
-            old_imgs.append(language_getter.produce_language(self.G, n=2).reshape(200, 784))
+            # Realized the bug could be that they are in different formats
+            # Trying out sth new. Will style up the code
+            for _ in range(2):
+                noise = np.random.normal(0, 1, size=[batch_size, random_dim])
+                to_be_old_imgs = self.G.predict(noise)
+                old_imgs.append(to_be_old_imgs)
 
             # Increase id
             id += 1
@@ -226,11 +235,8 @@ if __name__ == '__main__':
     vals = np.array(load(open('lang_for_gan.txt', 'rb'))[:60000])
     for _ in range(10):
         gen, disc = Generator(), Discriminator()
-        print(gen, disc)
         my_gan = GAN(generator=gen, discriminator=disc, x_train=vals)
         my_gan.train(epochs=11)
-        # disc = Discriminator()
-        # print(gen1 == gen2)
 
 
         # print(gen, disc)
