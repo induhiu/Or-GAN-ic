@@ -3,7 +3,7 @@
     Implementation by Kenny Talarico, June 2019. """
 
 import numpy as np
-from PIL import Image
+from Pillow import Image
 import os
 
 def main():
