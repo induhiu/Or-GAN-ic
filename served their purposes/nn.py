@@ -98,15 +98,15 @@ class Neural():
 # # implementation. You can use it for your reference
 if __name__ == '__main__':
     # Creating a gan
-    my_gan = gan.GAN()
-    my_gan.train(epochs=2, plot=False)
+    # my_gan = gan.GAN()
+    # my_gan.train(epochs=2, plot=False)
     # Creating a neural network object
     nn = Neural()
     nn.train_model(e=10)
     # If you want to save the model
-    # nn.model.save('model.h5')
-    # del model
+    nn.model.save('new_nn.h5')
+    del nn.model
     # Get how many of each are produced by a gan
     # my_counter = nn.get_count(nn.x_test.reshape(10000, 784))
-    my_counter = nn.get_count(produce_language(my_gan.G))
-    print(my_counter)
+    # my_counter = nn.get_count(produce_language(my_gan.G))
+    # print(my_counter)
