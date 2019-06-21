@@ -35,8 +35,8 @@ os.environ["KERAS_BACKEND"] = "tensorflow"
 random_dim = 100
 
 # Load a neural network
-my_nn = load_model('new_nn.h5')
-mnist_nn = load_model('mnist_model.h5')
+# my_nn = load_model('new_nn.h5')
+# mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
     def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5), g=None):
@@ -296,12 +296,12 @@ def get_count(data, id):
     return [Counter(['BCDEFGHIJK'[list(x).index(max(x))] for x in pred]),
             morphs]
 
-#
-if __name__ == '__main__':
-# #     # GAN().train(epochs=20)
-    vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
-    gen, disc = Generator(), Discriminator()
-    my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
+# #
+# if __name__ == '__main__':
+# # #     # GAN().train(epochs=20)
+#     vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
+#     gen, disc = Generator(), Discriminator()
+#     my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
     # my_gan.train(epochs=50)
 
     # gen2, disc2 = Generator(), Discriminator()

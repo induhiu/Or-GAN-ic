@@ -20,15 +20,26 @@ class Tree:
         self.neighbors = ([parent] if parent else [])
 
     def __str__(self):
-        return ('DEKU TREE' if self.parent is None else 'TREE') + ', age: ' + str(self.age) + ', radius: ' + str(self.age * 10 if self.age <= 15 else 150) + ', location: ' + str(self.location)
+        return ('DEKU TREE' if not self.parent else 'TREE') + ', age: ' + str(self.age) + ', radius: ' + str(self.age * 10 if self.age <= 15 else 150) + ', location: ' + str(self.location)
+
+    def _newlocation(self):
+        num = randbelow(628) / 100
+        r = math.log10(self.age)
+        loc = (round(math.cos(num) * r, 2), round(math.sin(num) * r, 2))
+        for tree in self.forest.trees:
+            if (loc[0]-tree.location[0]) ** 2 + (loc[1]-tree.location[1]) ** 2 <= r ** 2:
+                return None
+        return loc
 
     def spawnChild(self):
-        num = randbelow(628) / 100
-        #num = 0
-        r = 10 * math.log10(self.age)
-        child = Tree(location=(round(math.cos(num) * r, 2), round(math.sin(num) * r, 2)),
-                     forest=self.forest,
-                     parent=self)
+        for _ in range(10):
+            loc = self._newlocation()
+            if loc:
+                break
+        if not loc:
+            return None
+        r = math.log10(self.age)
+        child = Tree(location=loc, forest=self.forest, parent=self)
         self.forest.connections[child] = [self]
         self.forest.connections[self].append(child)
         self.neighbors.append(child)
