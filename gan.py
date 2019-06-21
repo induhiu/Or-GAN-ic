@@ -39,25 +39,22 @@ my_nn = load_model('new_nn.h5')
 mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
-    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5), g=None):
-        if g:
-            self.G = g
-        else:
-            self.G = Sequential()
-            self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
-            self.G.add(LeakyReLU(0.2))
+    def __init__(self):
+        self.G = Sequential()
+        self.G.add(Dense(256, input_dim=random_dim, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
+        self.G.add(LeakyReLU(0.2))
 
-            self.G.add(Dense(512))
-            self.G.add(LeakyReLU(0.2))
+        self.G.add(Dense(512))
+        self.G.add(LeakyReLU(0.2))
 
-            self.G.add(Dense(1024))
-            self.G.add(LeakyReLU(0.2))
+        self.G.add(Dense(1024))
+        self.G.add(LeakyReLU(0.2))
 
-            self.G.add(Dense(784, activation='tanh'))
-            self.G.compile(loss='binary_crossentropy', optimizer=optimizer)
+        self.G.add(Dense(784, activation='tanh'))
+        self.G.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 
 class Discriminator:
-    def __init__(self, optimizer=Adam(lr=0.0002, beta_1=0.5)):
+    def __init__(self):
         self.D = Sequential()
         self.D.add(Dense(1024, input_dim=784, kernel_initializer=initializers.RandomNormal(stddev=0.02)))
         self.D.add(LeakyReLU(0.2))
@@ -72,7 +69,7 @@ class Discriminator:
         self.D.add(Dropout(0.3))
 
         self.D.add(Dense(1, activation='sigmoid'))
-        self.D.compile(loss='binary_crossentropy', optimizer=optimizer)
+        self.D.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 
         self.D.trainable = False
 
@@ -80,8 +77,8 @@ class Discriminator:
         self.__init__()
 
 class GAN:
-    def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(Adam(lr=0.0002, beta_1=0.5)),
-                 generator=Generator(Adam(lr=0.0002, beta_1=0.5))):
+    def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(),
+                 generator=Generator()):
         self.O = Adam(lr=0.0002, beta_1=0.5)
         self.D = discriminator.D
         self.G = generator.G
@@ -136,35 +133,35 @@ class GAN:
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
 
-                # # # -----------------------------------------------------#
-                # # # Experience replay algorithm(still in testing)
-                # # # Comment out if you intend to use normal gan
-                # # # Create an interval larger than 1
-                # interval = 2
-                # if e % interval == 0:
-                #     # Create some noise
-                #     noise = np.random.normal(0, 1, size=(batch_size, 784))[:64]
-                #     # get the two most recent generations and reshape
-                #     x = np.array(old_imgs[-1:]).reshape(200, 784)
-                #     # shuffle the array 5 times
-                #     for _ in range(5):
-                #         shuffle(x)
-                #
-                #     # Randomly select images to use.
-                #     experience_rep = np.array([img for img in x[:64]] + list(noise))
-                #
-                #
-                #     # # Combine recently generated images and old ones
-                #     # gen_images = np.array(list(generated_images)[:64] + \
-                #     #             list(experience_rep))
-                #
-                #     # Concatenate the fake images and real ones
-                #     X = np.concatenate([image_batch, generated_images,
-                #                 experience_rep])
-                #
-                #     y_dis = np.zeros(3*batch_size)
-                #
                 # # -----------------------------------------------------#
+                # # Experience replay algorithm(still in testing)
+                # # Comment out if you intend to use normal gan
+                # # Create an interval larger than 1
+                interval = 2
+                if e % interval == 0:
+                    # Create some noise
+                    noise = np.random.normal(0, 1, size=(batch_size, 784))[:64]
+                    # get the two most recent generations and reshape
+                    x = np.array(old_imgs[-1:]).reshape(200, 784)
+                    # shuffle the array 5 times
+                    for _ in range(5):
+                        shuffle(x)
+
+                    # Randomly select images to use.
+                    experience_rep = np.array([img for img in x[:64]] + list(noise))
+
+
+                    # # Combine recently generated images and old ones
+                    # gen_images = np.array(list(generated_images)[:64] + \
+                    #             list(experience_rep))
+
+                    # Concatenate the fake images and real ones
+                    X = np.concatenate([image_batch, generated_images,
+                                experience_rep])
+
+                    y_dis = np.zeros(3*batch_size)
+
+                # -----------------------------------------------------#
 
                 # One-sided label smoothing
                 y_dis[:batch_size] = 0.9
@@ -188,7 +185,7 @@ class GAN:
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
             possible_morphs = []
-            if plot and id % 1 == 0:
+            if plot:
                 possible_morphs = plot_generated_images(id, self.G)
             if possible_morphs is not None:
                 for i in range(len(possible_morphs)):
@@ -249,7 +246,7 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    newfile = filename = 'ian_images/IanGANGeneratedImage%d' % id
+    newfile = filename = 'temp_folder/IanGANGeneratedImage%d' % id
     copy = 1
     while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
@@ -286,7 +283,7 @@ def get_count(data, id):
         for i in range(len(pred)):
             # Most of the time, the neural network will always give a prediction
             # that is > 0.9. Whenever the converse happens, we can assume there
-            # is an element of morphing. Am therefore using a range of .2
+            # is an element of morphing. Am therefore using a range of .4
             possible_morphs = [x for x in pred[i] if 0.4 <= x <= 0.6]
             if possible_morphs != []:
                 # appends the image number
@@ -296,13 +293,22 @@ def get_count(data, id):
     return [Counter(['BCDEFGHIJK'[list(x).index(max(x))] for x in pred]),
             morphs]
 
+# #
+# if __name__ == '__main__':
+# # #     # GAN().train(epochs=20)
+#     vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
+#     gen, disc = Generator(), Discriminator()
+#     my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
+#     my_gan.train(epochs=20)
 #
-if __name__ == '__main__':
-# #     # GAN().train(epochs=20)
-    vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
-    gen, disc = Generator(), Discriminator()
-    my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
-    # my_gan.train(epochs=50)
+#     # gen2, gen3, disc2 = Generator(), Generator(), Discriminator()
+#     ganny1 = GAN(x_train=vals)
+#     ganny2 = GAN(x_train=vals)
+#     ganny2.G = ganny1.G
+#     for _ in range(10):
+#         ganny1.train()
+#         ganny2.train()
+
 
     # gen2, disc2 = Generator(), Discriminator()
     # my_gan2 = GAN(x_train=language_getter.produce_language(my_gan.G),
