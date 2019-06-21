@@ -35,8 +35,8 @@ os.environ["KERAS_BACKEND"] = "tensorflow"
 random_dim = 100
 
 # Load a neural network
-my_nn = load_model('new_nn.h5')
-mnist_nn = load_model('mnist_model.h5')
+# my_nn = load_model('new_nn.h5')
+# mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
     def __init__(self):
