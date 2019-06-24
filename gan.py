@@ -304,18 +304,10 @@ if __name__ == '__main__':
     ganny2 = GAN(x_train=vals)
     ganny3 = GAN(x_train=vals, generator=ganny1.G, discriminator=ganny2.D)
     ganny4 = GAN(x_train=vals, generator=ganny2.G, discriminator=ganny1.D)
-    ganny1.train(epochs=40)
-    # epochs = 10
-<<<<<<< HEAD
-    # for _ in range(epochs):
-    #     ganny1.train()
-    #     ganny2.train()
-    #     ganny3.train()
-    #     ganny4.train()
-=======
-    # for i in range(epochs):
-    #     ganny1.train(id=i)
-    #     ganny2.train(id=i)
-    #     ganny3.train(id=i)
-    #     ganny4.train(id=i)
->>>>>>> 6c2992496e8894ad4f81d292fd2b5b3e809212b7
+    # ganny1.train(epochs=40)
+    epochs = 10
+    for i in range(epochs):
+        ganny1.train(id=i)
+        ganny2.train(id=i)
+        ganny3.train(id=i)
+        ganny4.train(id=i)
