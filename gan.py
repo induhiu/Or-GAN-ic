@@ -249,7 +249,7 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    newfile = filename = 'ian_images/IanGANGeneratedImage%d' % id
+    newfile = filename = 'GANGeneratedImage%d' % id
     copy = 1
     while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
