@@ -187,7 +187,7 @@ class GAN:
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
             possible_morphs = []
-            if plot:
+            if plot and id >= 30:
                 possible_morphs = plot_generated_images(id, self.G)
             if possible_morphs is not None:
                 for i in range(len(possible_morphs)):
@@ -257,7 +257,7 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     plt.close('all')
 
     count_and_morphs = get_count(generated_images.reshape(examples, 784), id)
-    if id >= 25:
+    if id >= 30:
         print(count_and_morphs[0])
     if count_and_morphs[1] != []:
         return [generated_images[x] for x in count_and_morphs[1]]
@@ -283,7 +283,7 @@ def get_count(data, id):
     pred = my_nn.predict(data)
     morphs = []
     # We want a greater quality of images
-    if id > 15:
+    if id > 29:
         for i in range(len(pred)):
             # Most of the time, the neural network will always give a prediction
             # that is > 0.9. Whenever the converse happens, we can assume there
@@ -306,8 +306,16 @@ if __name__ == '__main__':
     ganny4 = GAN(x_train=vals, generator=ganny2.G, discriminator=ganny1.D)
     ganny1.train(epochs=40)
     # epochs = 10
+<<<<<<< HEAD
     # for _ in range(epochs):
     #     ganny1.train()
     #     ganny2.train()
     #     ganny3.train()
     #     ganny4.train()
+=======
+    # for i in range(epochs):
+    #     ganny1.train(id=i)
+    #     ganny2.train(id=i)
+    #     ganny3.train(id=i)
+    #     ganny4.train(id=i)
+>>>>>>> 6c2992496e8894ad4f81d292fd2b5b3e809212b7
