@@ -170,7 +170,7 @@ def main():
 
     # Create the appropriate number of similar characters to the user's choice:
     for pic in range(NUM_CHARACTERS_IN_FAMILY):
-        create_character(filename + str(pic), quad_list)
+        create_character('dave_images/' + filename + str(pic), quad_list)
 
 
 if __name__ == "__main__":
