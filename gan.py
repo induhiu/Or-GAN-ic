@@ -39,7 +39,11 @@ my_nn = load_model('new_nn.h5')
 # mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
+<<<<<<< HEAD
+    def __init__(self, g = None):
+=======
     def __init__(self, g=None):
+>>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
         if g:
             self.G = g
         else:
@@ -190,7 +194,7 @@ class GAN:
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
             possible_morphs = []
-            if plot and id >= 30:
+            if plot:
                 possible_morphs = plot_generated_images(id, self.G)
             if possible_morphs is not None:
                 for i in range(len(possible_morphs)):

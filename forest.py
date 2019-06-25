@@ -102,8 +102,8 @@ class Forest:
         for _ in range(years):
             r = rate
             self.age()
-            # for t in self.trees:
-            #     t.getnewneighbors()
+            for t in self.trees:
+                t.getnewneighbors()
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
@@ -111,14 +111,11 @@ class Forest:
     def spawn(self):
         parent = choice(self.trees)
         baby = None
-        tries = 0
         while not baby:
+            parent = choice(self.trees)
             while parent.age == 1:
                 parent = choice(self.trees)
             baby = parent.spawnChild()
-            tries += 1
-            if tries == 10:
-                return
         self.trees.append(baby)
         #self.trees.append(self.deku.spawnChild())
 
@@ -131,13 +128,17 @@ class Forest:
             if t.parent: #handle deku
                 GAN(generator=t.generator, discriminator=t.parent.discriminator, x_train=produce_language(t.parent.generator)).train()
 
-    def graph(self):
-        visualize(self.trees)
+    def graph(self, year='test'):
+        visualize(self.trees, str(year))
 
 
 def main():
     forest = Forest()
+<<<<<<< HEAD
+    forest.grow(rate=1, years=15)
+=======
     forest.grow(rate=1, years=50)
+>>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
     #forest.grow(rate=8, years=2)
     forest.graph()
 
