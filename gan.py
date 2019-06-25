@@ -187,7 +187,7 @@ class GAN:
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
             possible_morphs = []
-            if plot and id >= 30:
+            if plot:
                 possible_morphs = plot_generated_images(id, self.G)
             if possible_morphs is not None:
                 for i in range(len(possible_morphs)):
