@@ -121,11 +121,8 @@ def graph(trees, name):
 
     #plt.axis('on')
     plt.show()
-<<<<<<< HEAD
     # plt.savefig(name + '.png')
-=======
     #plt.savefig('test.png')
->>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
     plt.close('all')
 
 

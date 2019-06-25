@@ -39,11 +39,7 @@ my_nn = load_model('new_nn.h5')
 # mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
-<<<<<<< HEAD
-    def __init__(self, g = None):
-=======
     def __init__(self, g=None):
->>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
         if g:
             self.G = g
         else:
