@@ -120,8 +120,8 @@ def graph(trees):
                             alpha = 0.8)
 
     #plt.axis('on')
-    #plt.show()
-    plt.savefig('test.png')
+    plt.show()
+    #plt.savefig('test.png')
     plt.close('all')
 
 
