@@ -85,7 +85,7 @@ def graph(trees, name):
 
     #radii = [890000 * math.log10(k.age) for k in coords]
 
-    labels = {t: t.age for t in coords}
+    labels = {t: t.name for t in coords}
 
     # radii = [value[2] for value in dct.values()]
     # labels = {key: value[0] for key, value in dct.items()}
@@ -102,13 +102,13 @@ def graph(trees, name):
                            coords,
                            width = 1,
                            alpha = 0.5,
-                           solid_capstyle = 'round'
+                           solid_capstyle = 'square'
                            )
 
     nx.draw_networkx_nodes(G,
                            coords,
                            node_size = 100,
-                           node_color = 'g',
+                           node_color = 'gray',
                            alpha = 0.9
                            )
 
@@ -116,7 +116,7 @@ def graph(trees, name):
                             coords,
                             labels,
                             font_size = 8,
-                            font_color = 'w',
+                            font_color = 'black',
                             alpha = 0.8)
 
     #plt.axis('on')

@@ -97,7 +97,7 @@ class GAN:
                          metrics=['accuracy'])
 
     def train(self, epochs=1, batch_size=128, id=1, plot=True,
-            attack=False):
+            attack=False, tree=None):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
         if self.curr_x_train is not None:
@@ -190,8 +190,11 @@ class GAN:
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
             possible_morphs = []
-            if plot:
+            if plot and not tree:
                 possible_morphs = plot_generated_images(id, self.G)
+            if plot and tree:
+                possible_morphs = plot_tree_images(tree)
+
             if possible_morphs is not None:
                 for i in range(len(possible_morphs)):
                     morphed.append(possible_morphs[i])
@@ -256,6 +259,29 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
         copy += 1
+    plt.savefig(newfile)
+    plt.close('all')
+
+    count_and_morphs = get_count(generated_images.reshape(examples, 784), id)
+    if id >= 30:
+        print(count_and_morphs[0])
+    if count_and_morphs[1] != []:
+        return [generated_images[x] for x in count_and_morphs[1]]
+
+def plot_tree_images(tree):
+    noise = np.random.normal(0, 1, size=[100, 100])
+    generated_images = generator.predict(noise)
+    generated_images = generated_images.reshape(100, 28, 28)
+    plt.figure(figsize=(10, 10))
+    for i in range(generated_images.shape[0]):
+        plt.subplot(dim[0], dim[1], i+1)
+        plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
+        plt.axis('off')
+    plt.tight_layout()
+    newfile = filename = 'tree_images/' + tree.name
+    num = 1
+    while os.path.exists(newfile + str(num) + '.png'):
+        num += 1
     plt.savefig(newfile)
     plt.close('all')
 
