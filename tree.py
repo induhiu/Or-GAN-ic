@@ -25,9 +25,10 @@ class Tree:
     def _newlocation(self):
         num = randbelow(628) / 100
         r = math.log10(self.age)
-        loc = (round(math.cos(num) * r, 2), round(math.sin(num) * r, 2))
+        # r = 10
+        loc = (self.location[0] + round(math.cos(num) * r, 2), self.location[1] + round(math.sin(num) * r, 2))
         for tree in self.forest.trees:
-            if (loc[0]-tree.location[0]) ** 2 + (loc[1]-tree.location[1]) ** 2 <= r ** 2:
+            if (loc[0]-tree.location[0]) ** 2 + (loc[1]-tree.location[1]) ** 2 <= math.log10(tree.age) ** 2:
                 return None
         return loc
 
@@ -51,7 +52,8 @@ class Tree:
     def getnewneighbors(self):
         for t in self.forest.trees:
             if (t is not self.parent and t is not self and t not in self.neighbors and
-                ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1])) <= (2.5 * math.log10(self.age)) ** 2):
+                # ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1])) <= (2.5 * math.log10(self.age)) ** 2):
+                ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1]) ** 2) <= (0.7 * math.log10(self.age)) ** 2):
                 self.forest.connections[self].append(t)
                 self.forest.connections[t].append(self)
                 self.neighbors.append(t)

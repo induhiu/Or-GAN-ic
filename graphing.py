@@ -48,7 +48,7 @@ import math
 #     # edges = [(0, 1), (1, 2)]
 #     return G, positions, edges
 
-def graph(trees):
+def graph(trees, name):
     """ The main function. """
 
     # This represses some weird warnings that I was getting:
@@ -116,12 +116,12 @@ def graph(trees):
                             coords,
                             labels,
                             font_size = 8,
-                            font_color = 'b',
+                            font_color = 'w',
                             alpha = 0.8)
 
     #plt.axis('on')
-    #plt.show()
-    plt.savefig('test.png')
+    plt.show()
+    # plt.savefig(name + '.png')
     plt.close('all')
 
 
