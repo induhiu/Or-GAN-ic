@@ -35,11 +35,15 @@ os.environ["KERAS_BACKEND"] = "tensorflow"
 random_dim = 100
 
 # Load a neural network
-# my_nn = load_model('new_nn.h5')
+my_nn = load_model('new_nn.h5')
 # mnist_nn = load_model('mnist_model.h5')
 
 class Generator:
+<<<<<<< HEAD
     def __init__(self, g = None):
+=======
+    def __init__(self, g=None):
+>>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
         if g:
             self.G = g
         else:
@@ -83,8 +87,10 @@ class GAN:
     def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(),
                  generator=Generator()):
         self.O = Adam(lr=0.0002, beta_1=0.5)
-        self.D = discriminator.D
-        self.G = generator.G
+        self.D = discriminator.D if type(discriminator) == type(Discriminator()) \
+                 else discriminator
+        self.G = generator.G if type(generator) == type(Generator()) \
+                 else generator
 
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
@@ -249,15 +255,17 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    newfile = filename = 'GANGeneratedImage%d' % id
+    newfile = filename = 'normal_gan_images/GANGeneratedImage%d' % id
     copy = 1
     while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
         copy += 1
     plt.savefig(newfile)
     plt.close('all')
+
     count_and_morphs = get_count(generated_images.reshape(examples, 784), id)
-    # print(count_and_morphs[0])
+    if id >= 30:
+        print(count_and_morphs[0])
     if count_and_morphs[1] != []:
         return [generated_images[x] for x in count_and_morphs[1]]
 
@@ -282,7 +290,7 @@ def get_count(data, id):
     pred = my_nn.predict(data)
     morphs = []
     # We want a greater quality of images
-    if id > 15:
+    if id > 29:
         for i in range(len(pred)):
             # Most of the time, the neural network will always give a prediction
             # that is > 0.9. Whenever the converse happens, we can assume there
@@ -297,27 +305,16 @@ def get_count(data, id):
             morphs]
 
 # #
-# if __name__ == '__main__':
-# # #     # GAN().train(epochs=20)
-#     vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
-#     gen, disc = Generator(), Discriminator()
-#     my_gan = GAN(x_train=vals, generator=gen, discriminator=disc)
-#     my_gan.train(epochs=20)
-#
-#     # gen2, gen3, disc2 = Generator(), Generator(), Discriminator()
-#     ganny1 = GAN(x_train=vals)
-#     ganny2 = GAN(x_train=vals)
-#     ganny2.G = ganny1.G
-#     for _ in range(10):
-#         ganny1.train()
-#         ganny2.train()
-
-
-    # gen2, disc2 = Generator(), Discriminator()
-    # my_gan2 = GAN(x_train=language_getter.produce_language(my_gan.G),
-    #               generator=gen2, discriminator=disc2)
-    # my_gan2.train(epochs=20)
-    # gen3, disc3 = Generator(), Discriminator()
-    # my_gan3 = GAN(x_train=language_getter.produce_language(my_gan2.G),
-    #               generator=gen3, discriminator=disc3)
-    # my_gan3.train(epochs=20)
+if __name__ == '__main__':
+    vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
+    ganny1 = GAN(x_train=vals)
+    ganny2 = GAN(x_train=vals)
+    ganny3 = GAN(x_train=vals, generator=ganny1.G, discriminator=ganny2.D)
+    ganny4 = GAN(x_train=vals, generator=ganny2.G, discriminator=ganny1.D)
+    # ganny1.train(epochs=40)
+    epochs = 10
+    for i in range(epochs):
+        ganny1.train(id=i)
+        ganny2.train(id=i)
+        ganny3.train(id=i)
+        ganny4.train(id=i)

@@ -134,7 +134,11 @@ class Forest:
 
 def main():
     forest = Forest()
+<<<<<<< HEAD
     forest.grow(rate=1, years=15)
+=======
+    forest.grow(rate=1, years=50)
+>>>>>>> d1f37b15579b57f2287c76997dacef364b640c01
     #forest.grow(rate=8, years=2)
     forest.graph()
 
