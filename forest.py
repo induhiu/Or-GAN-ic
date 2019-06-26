@@ -24,7 +24,7 @@ class Forest:
         print('\n', 'In the vast, deep forest of Hyrule...', '\n', 'Long have I served as the guardian spirit...', '\n', 'I am known as the Deku Tree...', '\n\n', sep='')
         print("Creating Deku Tree...")
         self.names = load(open('names.txt', 'rb'))
-        self.deku = tree.Tree(location=(0, 0), forest=self, generator=Generator(g=load_model('./saveddekus/DEKU40.h5')), name=self.names.pop(0))
+        self.deku = tree.Tree(location=(0, 0), forest=self, generator=Generator(g=load_model('./saveddekus/DEKU60.h5')), name=self.names.pop(0))
         self.trees = [self.deku]
         self.connections = {self.deku: []}
         print("Forest generated!")
