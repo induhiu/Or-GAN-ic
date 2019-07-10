@@ -7,14 +7,13 @@ from gan import GAN
 import math
 from secrets import randbelow
 from language_getter import produce_language
-import gc
-from tensorflow.keras import backend as K
 from tensorflow.keras.models import load_model
 
 random_dim = 100
 
 class Tree:
     def __init__(self, location, forest, parent=None, generator=Generator(), name='unnamed'):
+        """ Constructor for a Tree. """
         self.generator = generator
         self.discriminator = Discriminator()
         self.nn = load_model('new_nn.h5')
@@ -26,15 +25,16 @@ class Tree:
         self.name = name
 
     def __repr__(self):
+        """ Overwrite default str representation to output
+            T(<position in list of trees>) """
         return 'T(' + str(self.forest.trees.index(self)) + ')'
 
-    def communicate(self, elder, plot=False):
-        GAN(generator=self.generator, discriminator=elder.discriminator, x_train=produce_language(elder.generator.G)).train(epochs=1, tree=self, plot=plot)
-
     def _newlocation(self):
+        """ Find a suitable location for a child. """
         num = randbelow(628) / 100
+
+        # A tree's roots are log10 of its age.
         r = math.log10(self.age)
-        # r = 10
         loc = (self.location[0] + round(math.cos(num) * r, 2), self.location[1] + round(math.sin(num) * r, 2))
         for tree in self.forest.trees:
             if (loc[0]-tree.location[0]) ** 2 + (loc[1]-tree.location[1]) ** 2 <= math.log10(tree.age) ** 2:
@@ -42,6 +42,7 @@ class Tree:
         return loc
 
     def spawnChild(self):
+        """ Attempt to spawn a child. If successful, return it. If not, return None. """
         for _ in range(10):
             loc = self._newlocation()
             if loc:
@@ -56,12 +57,14 @@ class Tree:
         return child
 
     def resetDiscriminator(self):
+        """ Reset this tree's discriminator. """
         self.discriminator.reset()
 
     def getnewneighbors(self):
+        """ Check for neighbors within radius of roots. If found, add all necessary
+            connections within both trees and within forest. """
         for t in self.forest.trees:
             if (t is not self.parent and t is not self and t not in self.neighbors and
-                # ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1])) <= (2.5 * math.log10(self.age)) ** 2):
                 ((t.location[0] - self.location[0]) ** 2 + (t.location[1] - self.location[1]) ** 2) <= (1.4 * math.log10(self.age)) ** 2):
                 self.forest.connections[self].append(t)
                 self.forest.connections[t].append(self)

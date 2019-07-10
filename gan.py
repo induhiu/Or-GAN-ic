@@ -88,11 +88,6 @@ class GAN:
         self.D = (Discriminator().D if not discriminator else discriminator.D)
         self.G = (Generator().G if not generator else generator.G)
         self.nn = nn
-        # self.D = discriminator.D if type(discriminator) == type(Discriminator()) \
-        #          else discriminator
-        # self.G = generator.G if type(generator) == type(Generator()) \
-        #          else generator
-
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
 
@@ -100,8 +95,6 @@ class GAN:
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O,
                          metrics=['accuracy'])
 
-    # def train(self, epochs=1, batch_size=128, id=1, plot=True,
-    #         attack=False, tree=None, xtrain=None, xtest=None):
     def train(self, testid=None, epochs=1, batch_size=128, id=1, plot=True,
             attack=False, tree=None, xtrain=None, xtest=None):
         # Get the training and testing data
