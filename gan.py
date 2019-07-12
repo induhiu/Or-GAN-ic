@@ -20,9 +20,12 @@ from tensorflow.keras import initializers
 
 from tensorflow.keras.models import load_model
 import language_getter
+# from language_getter import produce_language
 from pickle import load
 from random import shuffle
 from collections import Counter
+
+import time
 
 
 # Let Keras know that we are using tensorflow as our backend engine
@@ -77,31 +80,27 @@ class Discriminator:
         self.D.trainable = False
 
     def reset(self):
-        self.__init__()
+        self.D.reset_states()
 
 class GAN:
-    def __init__(self, random_dim=100, x_train=None, x_test=None, discriminator=Discriminator(),
-                 generator=Generator()):
+    def __init__(self, nn, random_dim=100, discriminator=None, generator=None):
         self.O = Adam(lr=0.0002, beta_1=0.5)
-        self.D = discriminator.D if type(discriminator) == type(Discriminator()) \
-                 else discriminator
-        self.G = generator.G if type(generator) == type(Generator()) \
-                 else generator
-
+        self.D = (Discriminator().D if not discriminator else discriminator.D)
+        self.G = (Generator().G if not generator else generator.G)
+        self.nn = nn
         self.input = Input(shape=(random_dim,))
         self.output = self.D(self.G(self.input))
-        self.curr_x_train, self.curr_x_test = x_train, x_test
 
         self.GAN = Model(inputs=self.input, outputs=self.output)
         self.GAN.compile(loss='binary_crossentropy', optimizer=self.O,
                          metrics=['accuracy'])
 
-    def train(self, epochs=1, batch_size=128, id=1, plot=True,
-            attack=False, tree=None):
+    def train(self, testid=None, epochs=1, batch_size=128, id=1, plot=True,
+            attack=False, tree=None, xtrain=None, xtest=None):
         # Get the training and testing data
         x_train, y_train, x_test, y_test = 0, 0, 0, 0
-        if self.curr_x_train is not None:
-            x_train, x_test = self.curr_x_train, self.curr_x_test
+        if xtrain is not None:
+            x_train, x_test = xtrain, xtest
             x_train = (x_train.astype(np.float32) - 127.5)/127.5
             x_train = x_train.reshape(x_train.shape[0], x_train.shape[1] ** 2)
         else:
@@ -121,13 +120,19 @@ class GAN:
         # # A list to hold possible morphed images
         morphed = []
 
+        # Temp list to hold timestamps
+        # times = []
+
         for e in range(1, epochs+1):
-            print('-'*15, 'Epoch %d' % id, '-'*15)
+            # print('-'*15, 'Epoch %d' % id, '-'*15)
             for _ in tqdm(range(batch_count)):
                 # Get a random set of input noise and images
+                # time1 = time.time()
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
+                # time2 = time.time()
                 image_batch = x_train[np.random.randint(0, x_train.shape[0], size=batch_size)]
                 image_batch = image_batch.reshape(128, 784)  # remove later
+                # time3 = time.time()
 
                 # Generate fake MNIST images
                 generated_images = self.G.predict(noise)
@@ -137,49 +142,62 @@ class GAN:
 
                 X = np.concatenate([image_batch, generated_images])
                 y_dis = np.zeros(2*batch_size)
+                # time4 = time.time()
 
+                # # # -----------------------------------------------------#
+                # # # Experience replay algorithm(still in testing)
+                # # # Comment out if you intend to use normal gan
+                # # # Create an interval larger than 1
+                # interval = 2
+                # if e % interval == 0:
+                #     # Create some noise
+                #     noise = np.random.normal(0, 1, size=(batch_size, 784))[:64]
+                #     # get the two most recent generations and reshape
+                #     x = np.array(old_imgs[-1:]).reshape(200, 784)
+                #     # shuffle the array 5 times
+                #     for _ in range(5):
+                #         shuffle(x)
+                #
+                #     # Randomly select images to use.
+                #     experience_rep = np.array([img for img in x[:64]] + list(noise))
+                #
+                #
+                #     # # Combine recently generated images and old ones
+                #     # gen_images = np.array(list(generated_images)[:64] + \
+                #     #             list(experience_rep))
+                #
+                #     # Concatenate the fake images and real ones
+                #     X = np.concatenate([image_batch, generated_images,
+                #                 experience_rep])
+                #
+                #     y_dis = np.zeros(3*batch_size)
+                #
                 # # -----------------------------------------------------#
-                # # Experience replay algorithm(still in testing)
-                # # Comment out if you intend to use normal gan
-                # # Create an interval larger than 1
-                interval = 2
-                if e % interval == 0:
-                    # Create some noise
-                    noise = np.random.normal(0, 1, size=(batch_size, 784))[:64]
-                    # get the two most recent generations and reshape
-                    x = np.array(old_imgs[-1:]).reshape(200, 784)
-                    # shuffle the array 5 times
-                    for _ in range(5):
-                        shuffle(x)
 
-                    # Randomly select images to use.
-                    experience_rep = np.array([img for img in x[:64]] + list(noise))
-
-
-                    # # Combine recently generated images and old ones
-                    # gen_images = np.array(list(generated_images)[:64] + \
-                    #             list(experience_rep))
-
-                    # Concatenate the fake images and real ones
-                    X = np.concatenate([image_batch, generated_images,
-                                experience_rep])
-
-                    y_dis = np.zeros(3*batch_size)
-
-                # -----------------------------------------------------#
 
                 # One-sided label smoothing
                 y_dis[:batch_size] = 0.9
+                # time5 = time.time()
 
                 # Train discriminator
                 self.toggleDTrain()
                 self.D.train_on_batch(X, y_dis)
+                # time6 = time.time()
 
                 # Train generator
                 noise = np.random.normal(0, 1, size=[batch_size, random_dim])
                 self.toggleDTrain()
 
                 self.GAN.train_on_batch(noise, np.ones(batch_size))
+                # time7 = time.time()
+                # times = [time1, time2, time3, time4, time5, time6, time7]
+
+            # while True:
+            #     time_to_use = input('What times?')
+            #     if time_to_use == 'n':
+            #         break
+            #     time_to_use = time_to_use.split()
+            #     print(times[int(time_to_use[0])] - times[int(time_to_use[1])])
 
             # If you want to evaluate the model's perfomance. To be used
             # in times of attack. Threshold loss is 20. If average loss is above
@@ -189,15 +207,17 @@ class GAN:
                     else None
             # Plots the images if plot is set to True(default)
             # Can add an extra condition e.g. if id == 10
-            possible_morphs = []
+            # possible_morphs = []
             if plot and not tree:
-                possible_morphs = plot_generated_images(id, self.G)
-            if plot and tree:
-                possible_morphs = plot_tree_images(tree)
-
-            if possible_morphs is not None:
-                for i in range(len(possible_morphs)):
-                    morphed.append(possible_morphs[i])
+                # possible_morphs = plot_generated_images(id, self.G)
+                plot_generated_images(id, self.G)
+            if plot and tree and id % 10 == 0:
+                # possible_morphs = plot_tree_images(tree)
+                plot_tree_images(tree, testid)
+            #
+            # if possible_morphs is not None:
+            #     for i in range(len(possible_morphs)):
+            #         morphed.append(possible_morphs[i])
 
             # ----------------------------------------------- #
             # Counting the images using a neural network
@@ -209,10 +229,10 @@ class GAN:
 
             # Append recent generations to old images list
             # Realized the bug could be that they are in different formats
-            # Trying out sth new. Will style up the code
-            imgs = language_getter.produce_language(self.G, n=2).reshape(200,784)
-            imgs = (imgs.astype(np.float32) - 127.5)/127.5
-            old_imgs.append(imgs)
+            # # Trying out sth new. Will style up the code
+            # imgs = language_getter.produce_language(self.G, n=2).reshape(200,784)
+            # imgs = (imgs.astype(np.float32) - 127.5)/127.5
+            # old_imgs.append(imgs)
             # Increase id
             id += 1
         # print('This is how many morphed images were found')
@@ -221,6 +241,11 @@ class GAN:
         #     plot_morphs(np.array(morphed[:100]))
         # else:
         #     plot_morphs(np.array(morphed))
+        ex = produce_language(self.G, n=100).reshape(100**2, 784)
+        # ex = ex.astype(np.int64)
+        # ex = ex.reshape(ex[0], ex[1]**2)
+        ex = (ex.astype(np.float32) - 127.5)/127.5
+        return Counter(['BCDEFGHIJK'[list(x).index(max(x))] for x in self.nn.predict(ex)])
 
     def toggleDTrain(self):
         self.D.trainable = not self.D.trainable
@@ -254,7 +279,7 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    newfile = filename = 'normal_gan_images/GANGeneratedImage%d' % id
+    newfile = filename = 'ian_images/GANGeneratedImage%d' % id
     copy = 1
     while os.path.exists(newfile + '.png'):
         newfile = filename + '(' + str(copy) + ')'
@@ -268,28 +293,31 @@ def plot_generated_images(id, generator, examples=100, dim=(10, 10),
     if count_and_morphs[1] != []:
         return [generated_images[x] for x in count_and_morphs[1]]
 
-def plot_tree_images(tree):
+def plot_tree_images(tree, id):
     noise = np.random.normal(0, 1, size=[100, 100])
-    generated_images = generator.predict(noise)
+    generated_images = tree.generator.G.predict(noise)
     generated_images = generated_images.reshape(100, 28, 28)
     plt.figure(figsize=(10, 10))
     for i in range(generated_images.shape[0]):
-        plt.subplot(dim[0], dim[1], i+1)
+        plt.subplot(10, 10, i+1)
         plt.imshow(generated_images[i], interpolation='nearest', cmap='gray_r')
         plt.axis('off')
     plt.tight_layout()
-    newfile = filename = 'tree_images/' + tree.name
+    newfile = filename = 'tree_images/test' + str(id) + '/' + tree.name
+    # newfile = filename = 'ian_images/' + tree.name
     num = 1
     while os.path.exists(newfile + str(num) + '.png'):
         num += 1
-    plt.savefig(newfile)
+    # plt.figtext(5, 5, str(nn.predict(generated_images.reshape(100, 784))))
+    plt.savefig(newfile + str(num) + '.png')
+    # plt.savefig(filename + '.png')
     plt.close('all')
 
-    count_and_morphs = get_count(generated_images.reshape(examples, 784), id)
-    if id >= 30:
-        print(count_and_morphs[0])
-    if count_and_morphs[1] != []:
-        return [generated_images[x] for x in count_and_morphs[1]]
+    # count_and_morphs = get_count(generated_images.reshape(100, 784), id)
+    # if id >= 30:
+    #     print(count_and_morphs[0])
+    # if count_and_morphs[1] != []:
+    #     return [generated_images[x] for x in count_and_morphs[1]]
 
 def plot_morphs(morphs, dim=(10, 10), figsize=(10,10)):
     ''' Plots the morphed images '''
@@ -326,17 +354,17 @@ def get_count(data, id):
     return [Counter(['BCDEFGHIJK'[list(x).index(max(x))] for x in pred]),
             morphs]
 
-# #
-if __name__ == '__main__':
-    vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
-    ganny1 = GAN(x_train=vals)
-    ganny2 = GAN(x_train=vals)
-    ganny3 = GAN(x_train=vals, generator=ganny1.G, discriminator=ganny2.D)
-    ganny4 = GAN(x_train=vals, generator=ganny2.G, discriminator=ganny1.D)
-    # ganny1.train(epochs=40)
-    epochs = 10
-    for i in range(epochs):
-        ganny1.train(id=i)
-        ganny2.train(id=i)
-        ganny3.train(id=i)
-        ganny4.train(id=i)
+# # #
+# if __name__ == '__main__':
+#     vals = np.array(load(open('updated_lang_for_gan.txt', 'rb'))[:60000])
+#     ganny1 = GAN(x_train=vals)
+#     ganny2 = GAN(x_train=vals)
+#     ganny3 = GAN(x_train=vals, generator=ganny1.G, discriminator=ganny2.D)
+#     ganny4 = GAN(x_train=vals, generator=ganny2.G, discriminator=ganny1.D)
+#     # ganny1.train(epochs=40)
+#     epochs = 10
+#     for i in range(epochs):
+#         ganny1.train(id=i)
+#         ganny2.train(id=i)
+#         ganny3.train(id=i)
+#         ganny4.train(id=i)

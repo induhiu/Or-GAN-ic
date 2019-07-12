@@ -22,73 +22,22 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import math
-# import sys
-# import pickle
-# from matplotlib.axes._axes import _log as matplotlib_axes_logger
+import os
 
-
-# def generate_graph():
-#     """ Returns a graph with desired characteristics. """
-#
-#     # nodes:
-#     positions = {i: forest.trees[i].location
-#                  for i in range(len(forest.trees))
-#                  if forest.trees[i]
-#                 }
-#
-#     # edges:
-#     d = {(0,0): [(1,1), (2,3)],
-#          (1,1): [(0,0)],
-#          (2,3): [(0,0)]
-#          }
-#
-#     # positions = {0: (0, 0), 1: (1, 1), 2: (1, 2), 3: (2, 1), 4: (2, 2)}
-#     # G = nx.Graph(5, 20, pos = positions)
-#     G = nx.random_geometric_graph(5, 20, pos = positions)
-#     # edges = [(0, 1), (1, 2)]
-#     return G, positions, edges
 
 def graph(trees, name):
     """ The main function. """
 
-    # This represses some weird warnings that I was getting:
-    # matplotlib_axes_logger.setLevel('ERROR')
-
-    # Read the dictionary from the data file:
-    # with open('testdata.txt', 'rb') as fn:
-    #     dct = pickle.loads(fn.read())
-
     # Create the graph:
     G = nx.Graph()
 
-    ### Coordinates of the nodes:
-
-    # previous:
-    # coords = {key: value[0] for key, value in dct.items()}
-
-    # new:
     coords = {trees[i]: trees[i].location
                                for i in range(len(trees))
-                               if trees[i]
-                               }
+                               if trees[i]}
 
-    ### Edges:
-
-    # previous:
-    # edges = [(k, e) for k, v in dct.items() for e in v[1] if e > k]
-    # edges = [(1,2), (1,3)]
-
-    # new:
     edges = [(t, e) for t in coords for e in t.neighbors]
 
-
-
-    #radii = [890000 * math.log10(k.age) for k in coords]
-
-    labels = {t: t.name for t in coords}
-
-    # radii = [value[2] for value in dct.values()]
-    # labels = {key: value[0] for key, value in dct.items()}
+    labels = {t: t.__repr__() for t in coords}
 
     for edge in edges:
         G.add_edge(edge[0], edge[1])
@@ -97,18 +46,17 @@ def graph(trees, name):
     fig, ax = plt.subplots(figsize=(5, 5))
 
     # Draw edges and then nodes:
-
     nx.draw_networkx_edges(G,
                            coords,
                            width = 1,
                            alpha = 0.5,
-                           solid_capstyle = 'square'
+                           solid_capstyle = 'round'
                            )
 
     nx.draw_networkx_nodes(G,
                            coords,
                            node_size = 100,
-                           node_color = 'gray',
+                           node_color = 'yellow',
                            alpha = 0.9
                            )
 
@@ -116,13 +64,10 @@ def graph(trees, name):
                             coords,
                             labels,
                             font_size = 8,
-                            font_color = 'black',
+                            font_color = 'b',
                             alpha = 0.8)
 
-    #plt.axis('on')
-    plt.show()
-    # plt.savefig(name + '.png')
-    #plt.savefig('test.png')
+    plt.savefig('graph' + str(name) + '.png')
     plt.close('all')
 
 
