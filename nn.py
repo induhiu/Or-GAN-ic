@@ -1,6 +1,6 @@
-''' Neural network implementation. Will be used to give meaning to images.
-    Documentation(some) by Ian Nduhiu. Find an example implementation at the
-    bottom of the code'''
+''' Neural network implementation. Will be used to give meaning to images
+    produced in a forest(network of GANs).Documentation(some) by Ian Nduhiu.
+    Find an example implementation at the bottom of the code '''
 # Adapted from https://nextjournal.com/gkoehler/digit-recognition-with-keras
 
 # imports for array-handling and plotting
@@ -11,30 +11,32 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='3'
 #os.environ['CUDA_VISIBLE_DEVICES'] = ''
 
 # keras imports for the dataset and building our neural network
-from keras.datasets import mnist
-from keras.models import Sequential, load_model
-from keras.layers.core import Dense, Dropout, Activation
-from keras.utils import np_utils
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.models import Sequential, load_model
+from tensorflow.python.keras.layers.core import Dense, Dropout, Activation
+from tensorflow.python.keras.utils import np_utils
 
 # for reading data from text file
 import pickle
 
-import gan
-from language_getter import produce_language
-
+# counting individual images after neural network prediction
 from collections import Counter
-# for exits while debugging, use sys.exit()
-import sys
 
-alphabets = 'ABCDEFGHIJ'
+alphabets = 'BCDEFGHIJK'
 
 def load_external_data():
     ''' Returns externally loaded datasets for training neural network '''
-    all_vals = pickle.load(open('lang_for_nn.txt', 'rb'))
+
+    # Load external symbols for neural network training
+    all_vals = pickle.load(open('updated_lang_for_nn.txt', 'rb'))
+
+    # Separate images from their labels
     xtrain, xtest = np.array([x[0] for x in all_vals][:60000]),\
                         np.array([x[0] for x in all_vals][60000:])
     ytrain, ytest = np.array([alphabets.index(x[1]) for x in all_vals][:60000]),\
                         np.array([alphabets.index(x[1]) for x in all_vals][60000:])
+
+    # Reshape the images
     xtrain = xtrain.reshape(60000, 784)
     xtest = xtest.reshape(10000, 784)
     return (xtrain, ytrain, xtest, ytest)
@@ -44,6 +46,7 @@ class Neural():
     def __init__(self):
         ''' The Constructor '''
         self.x_train, self.y_train, self.x_test, self.y_test = load_external_data()
+        # # If you wish to use the mnist dataset, uncomment the line below
         # (self.x_train, self.y_train), (self.x_test, self.y_test) = mnist.load_data()
         self.x_train = self.x_train.reshape(60000, 784)
         self.x_train = self.x_train.astype('float32')
@@ -55,7 +58,6 @@ class Neural():
         n_classes = 10
         self.y_train = np_utils.to_categorical(self.y_train, n_classes)
         self.y_test = np_utils.to_categorical(self.y_test, n_classes)
-
 
         # building a linear stack of layers with the sequential model
         self.model = Sequential()
@@ -80,33 +82,25 @@ class Neural():
         self.model.fit(self.x_train, self.y_train, epochs=e, batch_size=128)
 
     def give_meaning(self, data=None):
-        ''' Predicts meaning of symbols. Returns an array of predictions '''
+        ''' Predicts meaning of symbols. Symbols can either be
+            externally loaded or it will default to using the current xtest.
+            Returns an array of predictions '''
         return self.model.predict(self.x_test) if data is None\
             else self.model.predict(data)
 
     def get_count(self, language):
         ''' Returns individual counts of the testing data'''
         pred = self.give_meaning(language)
-        print(pred)
-        print(pred[0])
         # Create a counter object to count each entry
-        my_counter = Counter([alphabets[list(x).index(max(x))] for x in pred])
-        return my_counter
+        return Counter([alphabets[list(x).index(max(x))] for x in pred])
 
 #  ------------------------------------------------------------------------  #
 # # This is an example of how to use the neural network in our gan
 # # implementation. You can use it for your reference
-if __name__ == '__main__':
-    # Creating a gan
-    # my_gan = gan.GAN()
-    # my_gan.train(epochs=2, plot=False)
-    # Creating a neural network object
-    nn = Neural()
-    nn.train_model(e=10)
-    # If you want to save the model
-    nn.model.save('new_nn.h5')
-    del nn.model
-    # Get how many of each are produced by a gan
-    # my_counter = nn.get_count(nn.x_test.reshape(10000, 784))
-    # my_counter = nn.get_count(produce_language(my_gan.G))
-    # print(my_counter)
+# if __name__ == '__main__':
+    # # Creating a neural network object
+    # nn = Neural()
+    # # Train the model
+    # nn.train_model(e=5)
+    # # If you want to save the model
+    # nn.model.save('name.h5')
