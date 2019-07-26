@@ -2,7 +2,6 @@
 DATE: June 4, 2019
 FILE: bezier.py
 AUTH: Dave Perkins
-
 DESC: This program helps generate a set of characters for the forest's
       'common language'. The squiggles are meant to look like chemical
       signatures. We want to use the program to create ten characters
