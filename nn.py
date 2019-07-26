@@ -18,7 +18,6 @@ from tensorflow.python.keras.utils import np_utils
 
 # for reading data from text file
 import pickle
-
 # counting individual images after neural network prediction
 from collections import Counter
 
