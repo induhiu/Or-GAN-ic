@@ -16,7 +16,6 @@
     locations = [<tree object>, <tree object>, <tree object>]
 
 
-
 """
 
 import networkx as nx
