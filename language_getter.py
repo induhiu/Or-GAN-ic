@@ -21,4 +21,5 @@ def produce_language(gen, n=600):
     # Reshape to take form of (n * 100, 28, 28)
     new_imgs = new_imgs.reshape(new_imgs.shape[0] * new_imgs.shape[1],
                                 new_imgs.shape[2], new_imgs.shape[3])
+
     return new_imgs
