@@ -61,6 +61,8 @@ class Forest:
             while randbelow(100) < r * 100:
                 self.spawn()
                 r -= 1
+                
+            self.communicate(plot=True)
 
             # output a graph with the name of the year as identification
             self.graph(name=y)
