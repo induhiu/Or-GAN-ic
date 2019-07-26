@@ -2,7 +2,7 @@
     score our results. Adapted from stackexchange. """
 
 # CITE: https://datascience.stackexchange.com/questions/9262/calculating-kl-divergence-in-python
-# DETAILS: Implementation of a KL Score
+# DETAILS: Implementation of Kullback-Leibler Divergence Score
 
 import numpy as np
 def KL(a, b):
