@@ -2,7 +2,6 @@
     for reintroduction into a forest(system of networked GANs) or prediction
     using a neural network. Default images produced are in the shape of
     (60000, 28, 28) '''
-
 import numpy as np
 
 def produce_language(gen, n=600):
