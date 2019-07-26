@@ -32,7 +32,6 @@ class Tree:
     def _newlocation(self):
         """ Find a suitable location for a child. """
         num = randbelow(628) / 100
-
         # A tree's roots are log10 of its age.
         r = math.log10(self.age)
         loc = (self.location[0] + round(math.cos(num) * r, 2), self.location[1] + round(math.sin(num) * r, 2))
