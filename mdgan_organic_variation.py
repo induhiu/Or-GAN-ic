@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 def main():
   ''' This is a sample implementation of one generator training with three discriminators '''
   
-  # Setting up the gan systems
+  # Setting up the gan network system
   gan1 = GAN(generator=Generator(), discriminator=Discriminator(), nn=load_model("new_nn.h5"))
   gan2 = GAN(generator=gan1.G, discriminator=Discriminator(), nn=load_model("new_nn.h5"))
   gan3 = GAN(generator=gan1.G, discriminator=Discriminator(), nn=load_model("new_nn.h5"))
