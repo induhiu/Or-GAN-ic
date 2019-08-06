@@ -1,10 +1,12 @@
 from gan import Generator
-from gan import Discriminator,
+from gan import Discriminator
 from gan import GAN
 from tensorflow.keras.models import load_model
 
 def main():
   ''' This is a sample implementation of one generator training with three discriminators '''
+  
+  # Setting up the gan systems
   gan1 = GAN(generator=Generator(), discriminator=Discriminator(), nn=load_model("new_nn.h5"))
   gan2 = GAN(generator=gan1.G, discriminator=Discriminator(), nn=load_model("new_nn.h5"))
   gan3 = GAN(generator=gan1.G, discriminator=Discriminator(), nn=load_model("new_nn.h5"))
