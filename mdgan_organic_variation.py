@@ -15,10 +15,10 @@ def main():
   training_period = 5
   
   # Train the system
-  for _ in range(training_period):
-    gan1.train()
-    gan2.train()
-    gan3.train()
+  for i in range(training_period):
+    gan1.train(testid=i)
+    gan2.train(testid=i)
+    gan3.train(testid=i)
     
 if __name__ == '__main__':
   main()
