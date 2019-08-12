@@ -47,7 +47,7 @@ given the inverse relationship between image quality and mode collapse.
 
 2. We also found out that a variation of our networking model helped
 to reduce mode collapse for GANs by networking multiple discriminators with a single generator. There does exist a variation of this, known as the mdgan. Our system, however, has its training done in a cyclical version from one discriminator to the next as opposed to
-the mdgan's separate training for each discriminator.
+the mdgan's separate training for each discriminator. You can look at mdgan_organic_variation.py for a sample demonstration.
 
 3. Morphing of image symbols,
 which is the combination of two or more images into one, rarely occured (1 in 500 produced images). We could, however, not pin down
