@@ -28,7 +28,7 @@ To run a forest simulation, you will need the following files:
   7. new_nn.h5 - neural network implementation
 
 Before executing forest.py, you will need to create an object of the Forest class and call the grow function - an example is provided in the source code. The parameters
-of the function are the rate at which new trees will "sprout" and the years the forest should do its growing, both of which are integers. The
+of the function are the rate - float - at which new trees will "sprout" and the years - integer - the forest should do its growing. The
 rate is more of a probabilistic figure as opposed to a fixed number. For example, a rate of 1 means a high likelihood of 1 new tree every year. These parameters are arbitrary. For optimal performance and results, we recommend a rate of 1 and 10 years of growth.
 
 ### Images and Graphs Generated
