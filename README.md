@@ -44,18 +44,21 @@ You can turn the image generation off by turning the plot attribute to False in 
 
 ### Results
 After extensive testing, as we had hypothezied, younger trees were worse teachers than older teachers. Images output from trees taught by 
-younger trees were of less quality than older ones.We also found out that a variation of our networking model helped
-to reduce mode collapse for GANs. If you wish to try it out, you can run the mdgan_organic_variation.py file. Lastly, morphing of image symbols,
+younger trees were of less quality than older ones.
+
+We also found out that a variation of our networking model helped
+to reduce mode collapse for GANs. If you wish to try it out, you can run the mdgan_organic_variation.py file. 
+
+Lastly, morphing of image symbols,
 which is the combination of two or more images into one, rarely occured (1 in 500 produced images). We could, however, not pin down
 any conditions that facilitated the occurrence of morphing.
 
 ### Conclusion
-We were able to conclude that GANs, in their current form, can not be used to mimic natural language evolution. Our project however managed to open a discussion about how GANs can be networked massively to work together while also mimicing
-a simulation of forest growth(hence the name orGANic).
+We were able to conclude that GANs, in their current form, can not be used to mimic natural language evolution. Our project however managed to bring insight into how GANs can be networked on a massive scale.
 
 ### Acknowledgements
-We would also like to acknowledge Hamilton College Computer Science Department for giving us the chance to do this research and all the 
-resources that were availed to us. We would like to acknowledge adaptation of code for our implementation of a Generative Adversarial 
+We would like to acknowledge Hamilton College Computer Science Department for giving us the chance to do this research and for all the 
+resources that were availed to us. We would also like to acknowledge adaptation of code for our implementation of a Generative Adversarial 
 Network from Datacamp By Stefan Hosein and code for our Neural Network Implementation Code from NextJournal by Gregor Koehler. We would
 also like to acknowledge Github for giving us a platform to share our work and collaborate with others.
 
