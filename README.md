@@ -8,8 +8,7 @@ mode collapse and morphing of image symbols being the primary aspects tested for
 
 We developed a set of ten symbols for use as the training language(Refer to 'example pics' folder for samples). We used bezier curves(Refer to 'bezier.py' 
 if interested) to achieve slight variations that resembled different handwritings. Once the network system was set up, we ran 
-different variations of tests using our system. You can find the summarized results near the bottom of the file together with our
-conclusion.
+different variations of tests using our system. You can find the summarized results as well as our conclusion near the end of the readme.
 
 ### Prerequisites
 1. You will need to have the modules pickle, tensorflow, numpy and keras installed. Refer to the source code to make sure
