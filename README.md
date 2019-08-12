@@ -43,13 +43,13 @@ in lines 70 in graphing.py and 205 in gan.py.
 You can turn the image generation off by turning the plot attribute to False in forest.py - line 65.
 
 ### Results
-After extensive testing, as we had hypothezied, younger trees were worse teachers than older teachers. Images output from trees taught by 
+1. After extensive testing, as we had hypothezied, younger trees were worse teachers than older teachers. Images output from trees taught by 
 younger trees were of less quality than older ones.
 
-We also found out that a variation of our networking model helped
+2. We also found out that a variation of our networking model helped
 to reduce mode collapse for GANs. If you wish to try it out, you can run the mdgan_organic_variation.py file. 
 
-Lastly, morphing of image symbols,
+3. Lastly, morphing of image symbols,
 which is the combination of two or more images into one, rarely occured (1 in 500 produced images). We could, however, not pin down
 any conditions that facilitated the occurrence of morphing.
 
